@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Awesomepick Expense Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; color: #1a1a2e; }
+  header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: white; padding: 24px 32px; }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  header p { font-size: 13px; color: #94a3b8; margin-top: 4px; }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px 20px; }
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .kpi-label { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; margin-bottom: 8px; }
+  .kpi-value { font-size: 28px; font-weight: 800; color: #1a1a2e; }
+  .kpi-sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+  .kpi-card.accent-blue .kpi-value { color: #3b82f6; }
+  .kpi-card.accent-red .kpi-value { color: #ef4444; }
+  .kpi-card.accent-purple .kpi-value { color: #8b5cf6; }
+  .kpi-card.accent-green .kpi-value { color: #10b981; }
+  .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .charts-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .chart-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .chart-card h3 { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 16px; }
+  .filter-bar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-bar label { font-size: 13px; font-weight: 600; color: #374151; }
+  .filter-bar select { padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; background: white; cursor: pointer; }
+  .table-card { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,.08); margin-bottom: 24px; }
+  .table-card h3 { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f8fafc; padding: 10px 12px; text-align: left; font-weight: 600; color: #475569; border-bottom: 2px solid #e2e8f0; font-size: 12px; text-transform: uppercase; letter-spacing: .3px; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #f8fafc; }
+  td.amount { font-weight: 700; font-family: 'SF Mono', monospace; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge-transport { background:#dbeafe;color:#1d4ed8; }
+  .badge-food { background:#fef3c7;color:#92400e; }
+  .badge-office { background:#ede9fe;color:#5b21b6; }
+  .badge-marketing { background:#d1fae5;color:#065f46; }
+  .badge-travel { background:#fee2e2;color:#991b1b; }
+  .badge-events { background:#fce7f3;color:#9d174d; }
+  .badge-samples { background:#cffafe;color:#155e75; }
+  .badge-staff { background:#ffedd5;color:#9a3412; }
+  .badge-ops { background:#e0e7ff;color:#3730a3; }
+  .badge-software { background:#ccfbf1;color:#134e4a; }
+  .badge-tax { background:#ecfccb;color:#365314; }
+  .badge-person { background:#f1f5f9;color:#334155; }
+  footer { text-align:center; padding:20px; font-size:12px; color:#94a3b8; border-top:1px solid #e2e8f0; }
+  #tableCount { font-size:12px; color:#64748b; margin-left:auto; }
+  @media(max-width:900px){.kpi-row{grid-template-columns:repeat(2,1fr)}.charts-grid,.charts-grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>💰 Awesomepick Expense Dashboard</h1>
+  <p>自動更新 · 資料來源：Google Sheets · 最後更新：2026-05-25</p>
+</header>
+<div class="container">
+  <div class="kpi-row">
+    <div class="kpi-card accent-blue">
+      <div class="kpi-label">總支出 Total Spend</div>
+      <div class="kpi-value">$6,058.63</div>
+      <div class="kpi-sub">Nov 2025 – May 2026（7 個月）</div>
+    </div>
+    <div class="kpi-card accent-red">
+      <div class="kpi-label">最高月份 Highest Month</div>
+      <div class="kpi-value">$3,120.59</div>
+      <div class="kpi-sub">Mar 2026（辦公室裝修 + 差旅）</div>
+    </div>
+    <div class="kpi-card accent-purple">
+      <div class="kpi-label">月均支出 Monthly Avg</div>
+      <div class="kpi-value">$865.52</div>
+      <div class="kpi-sub">含大型一次性項目</div>
+    </div>
+    <div class="kpi-card accent-green">
+      <div class="kpi-label">最大類別 Top Category</div>
+      <div class="kpi-value">$2,132.59</div>
+      <div class="kpi-sub">辦公室設備 &amp; 裝修</div>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>📊 月支出趨勢 Monthly Totals</h3>
+      <canvas id="monthlyBar" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>🍩 類別佔比 Category Breakdown</h3>
+      <canvas id="categoryDonut" height="200"></canvas>
+    </div>
+  </div>
+  <div class="charts-grid-2">
+    <div class="chart-card">
+      <h3>👤 人員 × 月 Per-Person per Month</h3>
+      <canvas id="personMonth" height="280"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>🗂 類別 × 月 Category per Month</h3>
+      <canvas id="catMonth" height="280"></canvas>
+    </div>
+  </div>
+  <div class="table-card">
+    <h3>📋 明細表 Transaction Detail</h3>
+    <div class="filter-bar">
+      <label>月份：</label>
+      <select id="filterMonth" onchange="renderTable()">
+        <option value="all">全部 All</option>
+        <option value="Nov 2025">Nov 2025</option>
+        <option value="Dec 2025">Dec 2025</option>
+        <option value="Jan 2026">Jan 2026</option>
+        <option value="Feb 2026">Feb 2026</option>
+        <option value="Mar 2026">Mar 2026</option>
+        <option value="Apr 2026">Apr 2026</option>
+        <option value="May 2026">May 2026 *</option>
+      </select>
+      <label>類別：</label>
+      <select id="filterCat" onchange="renderTable()">
+        <option value="all">全部</option>
+        <option value="transport">交通 &amp; 配送</option>
+        <option value="food">餐飲 &amp; 招待</option>
+        <option value="office">辦公室設備</option>
+        <option value="marketing">行銷 &amp; 印刷</option>
+        <option value="travel">商務差旅</option>
+        <option value="events">活動 &amp; 展覽</option>
+        <option value="samples">樣品 &amp; 測試</option>
+        <option value="staff">薪酬 &amp; 預支</option>
+        <option value="ops">辦公室日常</option>
+        <option value="software">軟體工具</option>
+        <option value="tax">稅費 &amp; 其他</option>
+      </select>
+      <span id="tableCount"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table><thead><tr>
+        <th>日期</th><th>說明</th><th>金額</th><th>經手人</th><th>類別</th><th>月份</th>
+      </tr></thead><tbody id="tableBody"></tbody></table>
+    </div>
+  </div>
+</div>
+<footer>最後更新：2026-05-25 · 下次自動更新：2026-06-05 · 幣別：USD · <span style="color:#f59e0b;font-weight:600">* May 2026 資料仍在收集中</span></footer>
+
+<script>
+const MONTHS = ['Nov 2025','Dec 2025','Jan 2026','Feb 2026','Mar 2026','Apr 2026','May 2026'];
+const MLABELS = ['Nov 25','Dec 25','Jan 26','Feb 26','Mar 26','Apr 26','May 26*'];
+const CATS = ['transport','food','office','marketing','travel','events','samples','staff','ops','software','tax'];
+const CLABELS = {transport:'交通&配送',food:'餐飲&招待',office:'辦公室設備',marketing:'行銷&印刷',travel:'商務差旅',events:'活動&展覽',samples:'樣品&測試',staff:'薪酬&預支',ops:'辦公室日常',software:'軟體工具',tax:'稅費&其他'};
+const CCOLORS = {transport:'#3b82f6',food:'#f59e0b',office:'#8b5cf6',marketing:'#10b981',travel:'#ef4444',events:'#ec4899',samples:'#06b6d4',staff:'#f97316',ops:'#6366f1',software:'#14b8a6',tax:'#84cc16'};
+const PERSONS = ['Sway','Jane','Tougo','Jeff','Seila','Hokie','Ular','Yong'];
+const PCOLORS = ['#1d4ed8','#db2777','#d97706','#059669','#7c3aed','#dc2626','#0891b2','#65a30d'];
+
+const catByMonth = {
+  transport: [17.69,19.22,13.50,83.90,62.42,44.54,12.75],
+  food:      [0,0,0,5.82,121.85,186.74,0],
+  office:    [0,0,0,14.94,1398.15,719.50,0],
+  marketing: [0,3.80,13.00,7.75,383.60,12.74,47.95],
+  travel:    [0,0,0,0,575,1374,0],
+  events:    [0,1.55,0,68.72,18.27,114.24,0],
+  samples:   [13.00,8.00,0,0,8.80,17.00,0],
+  staff:     [2.99,0,0,0,148.00,52.25,0],
+  ops:       [0,1.25,1.25,0,153.50,51.20,1.25],
+  software:  [0,0,0,0,0,20.00,0],
+  tax:       [0,7.50,0,0,251.00,0,0]
+};
+const personByMonth = {
+  Sway:  [0,0,0,0,3031.27,2499.13,0],
+  Jane:  [1.13,13.55,0,72.25,15.57,34.53,11.20],
+  Tougo: [0,0,10.50,80.15,71.05,29.02,0],
+  Jeff:  [13.00,22.93,13.00,0,0,0,0],
+  Seila: [19.55,4.84,4.25,8.29,2.70,5.03,0],
+  Hokie: [0,0,0,14.94,0,24.50,0],
+  Ular:  [0,0,0,5.50,0,0,47.70],
+  Yong:  [0,0,0,0,0,0,3.05]
+};
+
+// Chart 1 – Monthly bar
+new Chart(document.getElementById('monthlyBar'),{
+  type:'bar',
+  data:{labels:MLABELS,datasets:[{label:'Spend',data:[33.68,41.32,27.75,181.13,3120.59,2592.21,61.95],
+    backgroundColor:MLABELS.map((_,i)=>i>=6?'#f59e0b88':'#3b82f688'),
+    borderColor:MLABELS.map((_,i)=>i>=6?'#f59e0b':'#3b82f6'),borderWidth:2,borderRadius:6}]},
+  options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` $${c.parsed.y.toFixed(2)}`}}},
+    scales:{y:{ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}}}}
+});
+
+// Chart 2 – Category donut
+const catTotals=CATS.map(c=>catByMonth[c].reduce((s,v)=>s+v,0));
+new Chart(document.getElementById('categoryDonut'),{
+  type:'doughnut',
+  data:{labels:CATS.map(c=>CLABELS[c]),datasets:[{data:catTotals,backgroundColor:CATS.map(c=>CCOLORS[c]),hoverOffset:8}]},
+  options:{responsive:true,cutout:'60%',plugins:{
+    legend:{position:'right',labels:{font:{size:10},boxWidth:10}},
+    tooltip:{callbacks:{label:c=>` ${c.label}: $${c.parsed.toFixed(2)} (${(c.parsed/6058.63*100).toFixed(1)}%)`}}
+  }}
+});
+
+// Chart 3 – Per-person stacked
+new Chart(document.getElementById('personMonth'),{
+  type:'bar',
+  data:{labels:MLABELS,datasets:PERSONS.map((p,i)=>({label:p,data:personByMonth[p],backgroundColor:PCOLORS[i]+'bb',borderColor:PCOLORS[i],borderWidth:1}))},
+  options:{responsive:true,scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}}},
+    plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.parsed.y.toFixed(2)}`}}}}
+});
+
+// Chart 4 – Category stacked
+new Chart(document.getElementById('catMonth'),{
+  type:'bar',
+  data:{labels:MLABELS,datasets:CATS.map(c=>({label:CLABELS[c],data:catByMonth[c],backgroundColor:CCOLORS[c]+'bb',borderColor:CCOLORS[c],borderWidth:1}))},
+  options:{responsive:true,scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}}},
+    plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: $${c.parsed.y.toFixed(2)}`}}}}
+});
+
+// Transaction data
+const txns=[
+  // NOV 2025
+  {date:'2025-11-07',desc:'TUKTUK ride (Airport → Picasso)',amt:6.06,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-07',desc:'Delivery of luggage within BKK1',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-14',desc:'GrabExpress delivery',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-18',desc:'GrabExpress delivery',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-18',desc:'TUKTUK ride (Picasso → Aeon Mall)',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-18',desc:'TUKTUK ride (Aeon Mall → Picasso)',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-20',desc:'Transfer to SOT SRAV',amt:1.50,person:'Seila',cat:'staff',month:'Nov 2025'},
+  {date:'2025-11-20',desc:'Payment to NIM SENG',amt:1.49,person:'Seila',cat:'staff',month:'Nov 2025'},
+  {date:'2025-11-21',desc:'TUKTUK ride',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-24',desc:'GrabExpress delivery',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-24',desc:'Product Deliver to SmileShop',amt:1.13,person:'Jane',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-25',desc:'TUKTUK ride',amt:0.79,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-28',desc:'Delivery of documents/goods to office',amt:1.49,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-29',desc:'OatMilk for making drinks (tea project)',amt:13.00,person:'Jeff',cat:'samples',month:'Nov 2025'},
+  {date:'2025-11-29',desc:'TUKTUK ride (Picasso → Olympia City)',amt:1.12,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-29',desc:'TUKTUK ride',amt:1.19,person:'Seila',cat:'transport',month:'Nov 2025'},
+  {date:'2025-11-29',desc:'TUKTUK ride',amt:1.17,person:'Seila',cat:'transport',month:'Nov 2025'},
+  // DEC 2025
+  {date:'2025-12-01',desc:'Product Deliver to SmileShop',amt:1.25,person:'Jane',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-08',desc:'Criminal Record Request (govt fee)',amt:7.50,person:'Jeff',cat:'tax',month:'Dec 2025'},
+  {date:'2025-12-09',desc:'Buy more tea project ingredient',amt:5.50,person:'Jeff',cat:'samples',month:'Dec 2025'},
+  {date:'2025-12-09',desc:'Water for the Office',amt:1.25,person:'Seila',cat:'ops',month:'Dec 2025'},
+  {date:'2025-12-10',desc:'Buy strainer for tea project',amt:2.50,person:'Jeff',cat:'samples',month:'Dec 2025'},
+  {date:'2025-12-13',desc:'Transportation for CULT Christmas event',amt:1.55,person:'Jane',cat:'events',month:'Dec 2025'},
+  {date:'2025-12-14',desc:'Deliver item from Picasso to Sofitel',amt:0.80,person:'Jeff',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-14',desc:'Deliver Props to Sofitel CULT event',amt:0.93,person:'Seila',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-15',desc:'Deliver for Client',amt:1.48,person:'Seila',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-16',desc:'Poster Printing for Distributor',amt:3.80,person:'Jane',cat:'marketing',month:'Dec 2025'},
+  {date:'2025-12-17',desc:'Christmas Campaign Setup Transportation',amt:3.00,person:'Jane',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-17',desc:'Send product to Jeff at CheckInn hotel',amt:0.75,person:'Seila',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-19',desc:'TwT Delivery',amt:0.95,person:'Jane',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-19',desc:'Deliver the box from warehouse',amt:0.75,person:'Jeff',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-19',desc:'Sending product to the Waver Taile',amt:0.43,person:'Seila',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-26',desc:'85C transportation',amt:3.00,person:'Jane',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-26',desc:'Deliver go and come to 85C Bakery Midtown',amt:3.88,person:'Jeff',cat:'transport',month:'Dec 2025'},
+  {date:'2025-12-30',desc:'Deliver item to warehouse and back to Picasso',amt:2.00,person:'Jeff',cat:'transport',month:'Dec 2025'},
+  // JAN 2026
+  {date:'2026-01-07',desc:'Water',amt:1.25,person:'Seila',cat:'ops',month:'Jan 2026'},
+  {date:'2026-01-14',desc:'A3 poster for 85c Bakery x4 + delivery',amt:13.00,person:'Jeff',cat:'marketing',month:'Jan 2026'},
+  {date:'2026-01-19',desc:'Delivery from AEON',amt:3.00,person:'Seila',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-25',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-25',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-26',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-26',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-27',desc:'Delivery product to warehouse',amt:1.50,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-27',desc:'Delivery product to warehouse',amt:1.50,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-29',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  {date:'2026-01-29',desc:'Delivery product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Jan 2026'},
+  // FEB 2026
+  {date:'2026-01-30',desc:'Drinks for everyone (CNY event support)',amt:15.68,person:'Jane',cat:'events',month:'Feb 2026'},
+  {date:'2026-01-31',desc:'1st Day Food of CNY event',amt:8.87,person:'Jane',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-01',desc:'2nd Day Food of CNY event',amt:6.00,person:'Jane',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-01',desc:'Bring the product to Picasso',amt:1.25,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-01',desc:'Bring back item from event to Picasso',amt:5.50,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-02',desc:'Bring the product to warehouse',amt:1.25,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-05',desc:'PassApp booking',amt:1.37,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-05',desc:'Distributors Kompot Pepper Delivery (25,200 riel)',amt:6.30,person:'Jane',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-05',desc:'PassApp booking',amt:1.75,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-06',desc:'Client Delivery',amt:1.50,person:'Jane',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-06',desc:'PassApp booking',amt:1.17,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-06',desc:'PassApp booking',amt:1.15,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-06',desc:'PassApp booking',amt:1.42,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-07',desc:'PassApp booking',amt:1.50,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-07',desc:'PassApp booking',amt:1.17,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-07',desc:'PassApp booking',amt:0.88,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-07',desc:'PassApp booking',amt:1.15,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-09',desc:'PassApp booking',amt:1.25,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-10',desc:'Go to market and pair the key',amt:0.92,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-10',desc:'Back from market for pair the key',amt:0.80,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-10',desc:'PassApp booking',amt:1.40,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-11',desc:'Gongniu Bull 4W x2 pcs (office electronics)',amt:10.26,person:'Hokie',cat:'office',month:'Feb 2026'},
+  {date:'2026-02-11',desc:'Steel Measuring (office tools)',amt:4.68,person:'Hokie',cat:'office',month:'Feb 2026'},
+  {date:'2026-02-12',desc:'Go to check and bring back boss gift set',amt:1.25,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-12',desc:'Bring back boss gift set to Picasso',amt:1.43,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-12',desc:'PassApp booking',amt:1.15,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-12',desc:'PassApp booking',amt:1.00,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-13',desc:'5A Flyer Print',amt:5.50,person:'Ular',cat:'marketing',month:'Feb 2026'},
+  {date:'2026-02-13',desc:'PassApp booking',amt:1.65,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Transportation (urgent meeting, Chipmong, distributor)',amt:5.70,person:'Jane',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Bring stock product to MOC event',amt:1.50,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Back to warehouse, bring raw material to MOC event',amt:1.43,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Food payment during MOC event',amt:12.15,person:'Tougo',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Grab Delivery for Event',amt:0.75,person:'Seila',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Grab Delivery for Event',amt:1.67,person:'Seila',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Price Tag Printing and Clipper',amt:2.25,person:'Seila',cat:'marketing',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Purchasing essential needs for event staff (tissue, tape)',amt:2.12,person:'Seila',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-14',desc:'Two Days Food at ChipMong (MOC Event)',amt:19.98,person:'Jane',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-15',desc:'Go to MOC event',amt:1.50,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-15',desc:'Grab Delivery for Event',amt:1.50,person:'Seila',cat:'events',month:'Feb 2026'},
+  {date:'2026-02-17',desc:'Deliver basket set to One Mansion',amt:0.80,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-18',desc:'Bring stock to Picasso',amt:1.10,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-19',desc:'Return stock to warehouse',amt:1.75,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-20',desc:'Bring big paper box to office',amt:1.30,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-21',desc:'Go to visit office chair store',amt:1.38,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-21',desc:'Deliver basket to client',amt:1.75,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-23',desc:'Deliver gift set to MOC officer',amt:2.87,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-25',desc:'Bring prop display to Picasso',amt:1.38,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-25',desc:'Bring prop display from Picasso to new office',amt:0.88,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-25',desc:'Bring prop display from Waver Tale back to warehouse',amt:1.43,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-27',desc:'Transportation (Chipmong event / distributor visit)',amt:8.22,person:'Jane',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-27',desc:'Lunch break during distributor visit',amt:5.82,person:'Tougo',cat:'food',month:'Feb 2026'},
+  {date:'2026-02-27',desc:'Bring prop product display to 85C Phenh Hout',amt:2.53,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-27',desc:'Bring all prop product from new office to warehouse',amt:2.13,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-28',desc:'Back from MOC officer location',amt:3.00,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-28',desc:'Visit Fornature office chair store',amt:2.88,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-28',desc:'Fill stock for Darahotel',amt:1.13,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  {date:'2026-02-28',desc:'CheckInn hotel replace product stock',amt:1.03,person:'Tougo',cat:'transport',month:'Feb 2026'},
+  // MAR 2026
+  {date:'2026-03-01',desc:"Jeff's Jan 2026 allowance",amt:25.00,person:'Sway',cat:'staff',month:'Mar 2026'},
+  {date:'2026-03-02',desc:'CheckINN commission',amt:28.00,person:'Sway',cat:'staff',month:'Mar 2026'},
+  {date:'2026-03-03',desc:'New office carpet',amt:259.95,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-03',desc:'Cleaner monthly fee',amt:30.00,person:'Sway',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-03',desc:'Office chair',amt:260.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-03',desc:'Deliver honey from warehouse to Picasso',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-03',desc:'Deliver prop product to Picasso for Sway',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-04',desc:'Red pocket tax',amt:251.00,person:'Sway',cat:'tax',month:'Mar 2026'},
+  {date:'2026-03-05',desc:'Commission to Elsa',amt:20.00,person:'Sway',cat:'staff',month:'Mar 2026'},
+  {date:'2026-03-05',desc:'Grab delivery old stock from Jane',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-05',desc:'Deliver old stock from Oukwood',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-06',desc:'Office WIFI setup',amt:165.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-06',desc:'Bring back stock from warehouse',amt:1.50,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-06',desc:'Buy mouse battery for Akiva',amt:1.13,person:'Tougo',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-07',desc:'Deliver basket from Picasso to new office',amt:0.88,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-07',desc:'Deliver key to Boss Akiva',amt:0.88,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-07',desc:'Pair key for Boss Akiva 1 set',amt:4.00,person:'Tougo',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-07',desc:'Go to market pair key',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-09',desc:'Deliver prop product from new office to warehouse',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-09',desc:'Deliver invoice for K3M',amt:2.50,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-10',desc:'Go to check old office',amt:1.25,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-10',desc:'Deliver paper box and cashew nut sample to new office',amt:1.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-10',desc:'Deliver voucher from new office to Picasso',amt:1.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-10',desc:'Deliver sampler to new office',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-10',desc:'Basket sample',amt:12.00,person:'Sway',cat:'marketing',month:'Mar 2026'},
+  {date:'2026-03-11',desc:'Buy employee lunch',amt:44.18,person:'Sway',cat:'food',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'DHL clear fee',amt:109.87,person:'Sway',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'Lunch with client Sara',amt:62.59,person:'Sway',cat:'food',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'Deliver honey empty big bottle to supplier (round 2)',amt:1.25,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'Deliver honey empty big bottle to supplier (round 1)',amt:1.87,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'Come to Picasso to deliver empty big bottle',amt:0.90,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-12',desc:'Bring honey cap from warehouse to Picasso',amt:1.40,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-13',desc:'Deliver prop product to warehouse',amt:1.50,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-13',desc:'Deliver old stock from K3M to Picasso',amt:0.93,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-13',desc:'Go & back from K3M warehouse (new stock)',amt:10.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-13',desc:'Delivery issue honey to Picasso',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-13',desc:'Deliver fee for glass bottle',amt:3.60,person:'Sway',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-14',desc:'Deliver prop product to warehouse',amt:2.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-14',desc:'Deliver glass jar and new price tag to office',amt:1.38,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-14',desc:'Office AC cleaning fee',amt:127.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-16',desc:'Back to Picasso prepare product for event',amt:0.90,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-16',desc:'Back from IBC to new office',amt:0.90,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-16',desc:'Buy paper for customize basket at ICE Book Store',amt:2.60,person:'Tougo',cat:'marketing',month:'Mar 2026'},
+  {date:'2026-03-16',desc:'Go to IBC looking for paper material for basket',amt:0.95,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-16',desc:'Customize basket',amt:19.00,person:'Sway',cat:'marketing',month:'Mar 2026'},
+  {date:'2026-03-17',desc:'Deliver prop product from Fitology Gym to warehouse',amt:1.50,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-17',desc:'Delivery product gift set for Sway',amt:1.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-18',desc:'Deliver honey bottle from warehouse to Picasso',amt:0.85,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-18',desc:'Bring honey bottle from warehouse to new office',amt:1.25,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-18',desc:'Office socket setup fee',amt:390.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-19',desc:'Powder big package',amt:8.80,person:'Sway',cat:'samples',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Back from shopping buying cleaning product',amt:1.63,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Go to market buy cleaning product for new office',amt:1.25,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Go to another market for big white plastic box',amt:1.13,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Shelf delivery fee',amt:40.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Driver to Sihanoukville',amt:350.00,person:'Sway',cat:'travel',month:'Mar 2026'},
+  {date:'2026-03-20',desc:'Office cleaning equipment',amt:57.00,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-21',desc:'Go to warehouse for big paper box arrangement',amt:1.50,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-21',desc:'Deliver big white box to Picasso',amt:0.90,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-23',desc:'Print sticker and receipt note',amt:350.00,person:'Sway',cat:'marketing',month:'Mar 2026'},
+  {date:'2026-03-24',desc:'Company coffee bean',amt:15.08,person:'Sway',cat:'food',month:'Mar 2026'},
+  {date:'2026-03-24',desc:'Company hoover (vacuum)',amt:99.20,person:'Sway',cat:'office',month:'Mar 2026'},
+  {date:'2026-03-25',desc:'Buy alcohol 4 bottles 2L (cleaning supplies)',amt:4.50,person:'Tougo',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-25',desc:'Borrow to Tougo',amt:25.00,person:'Sway',cat:'staff',month:'Mar 2026'},
+  {date:'2026-03-25',desc:'Office tissue',amt:4.00,person:'Sway',cat:'ops',month:'Mar 2026'},
+  {date:'2026-03-25',desc:'Back from BKK market buying cleaning item equipment',amt:2.00,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-26',desc:'Deliver cleaning item from warehouse to new office',amt:1.78,person:'Tougo',cat:'transport',month:'Mar 2026'},
+  {date:'2026-03-26',desc:'Borrow to Seila',amt:50.00,person:'Sway',cat:'staff',month:'Mar 2026'},
+  {date:'2026-03-28',desc:'Food allowance for PATA event (lunch & dinner)',amt:12.60,person:'Jane',cat:'events',month:'Mar 2026'},
+  {date:'2026-03-28',desc:'Grab Transportation & Basket Delivery to PATA Event',amt:2.97,person:'Jane',cat:'events',month:'Mar 2026'},
+  {date:'2026-03-28',desc:'Transporting product from Cambodiana Event',amt:2.70,person:'Seila',cat:'events',month:'Mar 2026'},
+  {date:'2026-03-31',desc:'Driver to Sihanoukville',amt:225.00,person:'Sway',cat:'travel',month:'Mar 2026'},
+  // APR 2026
+  {date:'2026-04-01',desc:'CheckINN hotel commission',amt:2.25,person:'Sway',cat:'staff',month:'Apr 2026'},
+  {date:'2026-04-01',desc:'Lunch with employee in Shang Palace',amt:176.55,person:'Sway',cat:'food',month:'Apr 2026'},
+  {date:'2026-04-02',desc:'New office electronic cable and fix old socket',amt:115.00,person:'Sway',cat:'office',month:'Apr 2026'},
+  {date:'2026-04-02',desc:'Employee lunch',amt:10.19,person:'Sway',cat:'food',month:'Apr 2026'},
+  {date:'2026-04-02',desc:'Bassca venue visiting',amt:9.24,person:'Sway',cat:'events',month:'Apr 2026'},
+  {date:'2026-04-02',desc:'Malaysia business trip – hotel and dinner',amt:1150.00,person:'Sway',cat:'travel',month:'Apr 2026'},
+  {date:'2026-04-03',desc:'Aurelien event entrance fee – Akiva & Sway',amt:70.00,person:'Sway',cat:'events',month:'Apr 2026'},
+  {date:'2026-04-03',desc:'Lotus stamen (ingredient)',amt:6.27,person:'Jane',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-04',desc:'Aurelien event entrance fee – Jane',amt:35.00,person:'Sway',cat:'events',month:'Apr 2026'},
+  {date:'2026-04-04',desc:'Sticker Printing and Delivery to Office',amt:6.32,person:'Jane',cat:'marketing',month:'Apr 2026'},
+  {date:'2026-04-06',desc:'Sticker Printing and Delivery to Office',amt:6.42,person:'Jane',cat:'marketing',month:'Apr 2026'},
+  {date:'2026-04-06',desc:'Office new TV',amt:560.00,person:'Sway',cat:'office',month:'Apr 2026'},
+  {date:'2026-04-06',desc:'Water',amt:1.26,person:'Seila',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-07',desc:'HDMI socket',amt:20.00,person:'Sway',cat:'office',month:'Apr 2026'},
+  {date:'2026-04-07',desc:'Products Delivery to Vattanc Golf Resort',amt:3.72,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-07',desc:'Deliver MKT material from warehouse to Picasso',amt:1.51,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-07',desc:'Tuktuk to warehouse to grab antioxidant powder jar',amt:1.50,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-08',desc:'Delivery fee for SGS test',amt:7.50,person:'Sway',cat:'samples',month:'Apr 2026'},
+  {date:'2026-04-08',desc:'Deliver prop from Canadia event back to warehouse',amt:1.38,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-08',desc:'Deliver sample to office',amt:1.00,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-09',desc:'Visit 85C flagship',amt:0.93,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-09',desc:'Deliver product gift set to client',amt:1.00,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-09',desc:'Head to Picasso prepare product for Sway client',amt:0.88,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-10',desc:'Back from visit distribution channel CheckInn hotel',amt:3.00,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-10',desc:'Back from visit distribution channel 85C Midtown Mall',amt:2.76,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-10',desc:'Water',amt:1.26,person:'Seila',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-11',desc:'Tuktuk return to office from Picasso display',amt:0.88,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-11',desc:'Deliver prop display to Picasso',amt:1.00,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-11',desc:'Delivery products for Mrs. Voleak',amt:3.57,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-11',desc:'Further items to deliver to SGS Kaoshiung',amt:9.50,person:'Sway',cat:'samples',month:'Apr 2026'},
+  {date:'2026-04-12',desc:'Ant killer',amt:15.48,person:'Sway',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-20',desc:'Deliver gift set back to office',amt:1.03,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-20',desc:'Deliver gift set to Hyatt Regency',amt:2.11,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-20',desc:'Water',amt:1.26,person:'Seila',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-21',desc:'Client Delivery (Medbridge Team)',amt:1.00,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-21',desc:'Back from deliver product to Hyatt Regency',amt:1.23,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-21',desc:'Deliver product gift set to Hyatt Regency',amt:1.21,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-21',desc:'Tuktuk go to packing elixir gift set at Picasso',amt:1.51,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-21',desc:'GrabExpress deliver honey old stock back to supplier',amt:2.36,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-22',desc:'TaoBao delivery fee (import)',amt:10.05,person:'Sway',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-23',desc:'Client Meeting Transportation',amt:4.30,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-23',desc:'Deliver prop to warehouse',amt:1.53,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-23',desc:'Steam Machine (cleaning)',amt:24.50,person:'Hokie',cat:'office',month:'Apr 2026'},
+  {date:'2026-04-24',desc:'Deliver prop to Picasso',amt:1.25,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-25',desc:'Deliver to flowershop',amt:1.68,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-27',desc:'Seila borrow money',amt:50.00,person:'Sway',cat:'staff',month:'Apr 2026'},
+  {date:'2026-04-27',desc:'Water',amt:1.25,person:'Seila',cat:'ops',month:'Apr 2026'},
+  {date:'2026-04-28',desc:'Tuktuk to Picasso preparing the sample',amt:0.95,person:'Tougo',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-29',desc:'Delivery to Phumi Collection',amt:1.25,person:'Jane',cat:'transport',month:'Apr 2026'},
+  {date:'2026-04-30',desc:'ChatGPT subscription',amt:20.00,person:'Sway',cat:'software',month:'Apr 2026'},
+  {date:'2026-04-30',desc:'Flight ticket for Malaysia business trip',amt:224.00,person:'Sway',cat:'travel',month:'Apr 2026'},
+  {date:'2026-04-30',desc:'Office stuff (tissue, toilet paper)',amt:14.37,person:'Sway',cat:'ops',month:'Apr 2026'},
+  // MAY 2026 (partial *)
+  {date:'2026-05-05',desc:'Insert Sample + delivery',amt:9.90,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-06',desc:'Paper Sample',amt:1.50,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-06',desc:'Insert Sample print',amt:7.25,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-06',desc:'Water',amt:1.25,person:'Yong',cat:'ops',month:'May 2026'},
+  {date:'2026-05-08',desc:'Transportation – Shangrila Meeting / Product Delivery / Material for Tougo',amt:4.10,person:'Jane',cat:'transport',month:'May 2026'},
+  {date:'2026-05-08',desc:'Sample print & delivery',amt:7.25,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-10',desc:'3 A3 papers for insert',amt:2.25,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-10',desc:'Delivery',amt:1.55,person:'Ular',cat:'transport',month:'May 2026'},
+  {date:'2026-05-11',desc:'Insert cutting x3 & delivery fees',amt:18.00,person:'Ular',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-11',desc:'Product Deliver From HengHeng Printing House (card samples)',amt:2.20,person:'Jane',cat:'transport',month:'May 2026'},
+  {date:'2026-05-11',desc:'Sample price for Van Sophea Printing House',amt:1.80,person:'Yong',cat:'marketing',month:'May 2026'},
+  {date:'2026-05-12',desc:'Transportation for Pickle Spot',amt:4.90,person:'Jane',cat:'transport',month:'May 2026'},
+];
+
+function renderTable(){
+  const month=document.getElementById('filterMonth').value;
+  const cat=document.getElementById('filterCat').value;
+  let rows=txns.filter(t=>(month==='all'||t.month===month)&&(cat==='all'||t.cat===cat));
+  rows.sort((a,b)=>b.date.localeCompare(a.date));
+  const total=rows.reduce((s,r)=>s+r.amt,0);
+  document.getElementById('tableCount').textContent=`${rows.length} 筆 · 小計 $${total.toFixed(2)}`;
+  document.getElementById('tableBody').innerHTML=rows.map(r=>`<tr>
+    <td style="white-space:nowrap;color:#64748b;font-size:12px">${r.date}</td>
+    <td>${r.desc}</td>
+    <td class="amount" style="white-space:nowrap">$${r.amt.toFixed(2)}</td>
+    <td><span class="badge badge-person">${r.person}</span></td>
+    <td><span class="badge badge-${r.cat}">${CLABELS[r.cat]}</span></td>
+    <td style="font-size:12px;color:#64748b;white-space:nowrap">${r.month}${r.month==='May 2026'?' *':''}</td>
+  </tr>`).join('');
+}
+renderTable();
+</script>
+</body>
+</html>
