@@ -79,6 +79,32 @@
   .year-card-25 .year-margin-badge { background: #064e3b; color: #6ee7b7; }
   .year-card-26 .year-margin-badge { background: #312e81; color: #a5b4fc; }
 
+
+  .yr-wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
+  @media(max-width:700px){ .yr-wrap { grid-template-columns:1fr; } }
+  .yr-block { border-radius:12px; padding:20px; }
+  .yr-25 { background:linear-gradient(135deg,#0a1f0a,#0f2a14); border:1px solid #166534; }
+  .yr-26 { background:linear-gradient(135deg,#1e1b4b,#252060); border:1px solid #4338ca; }
+  .yr-head { display:flex; align-items:baseline; gap:8px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; }
+  .yr-year { font-size:20px; font-weight:800; }
+  .yr-25 .yr-year { color:#6ee7b7; }
+  .yr-26 .yr-year { color:#a5b4fc; }
+  .yr-period { font-size:11px; color:#6b7280; }
+  .yr-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .yr-m { }
+  .yr-ml { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#6b7280; margin-bottom:3px; }
+  .yr-mv { font-size:15px; font-weight:700; }
+  .yr-mv.g { color:#6ee7b7; } .yr-mv.b { color:#93c5fd; }
+  .yr-mv.a { color:#fcd34d; } .yr-mv.r { color:#fca5a5; }
+  .yr-mv.p { color:#c4b5fd; } .yr-mv.w { color:#e8e6f0; }
+  .yr-badge { margin-top:12px; display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+  .yr-25 .yr-badge { background:#064e3b; color:#6ee7b7; }
+  .yr-26 .yr-badge { background:#312e81; color:#a5b4fc; }
+  .yr-total-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:24px; background:#111827; border:1px solid #1f2937; border-radius:10px; padding:14px 18px; }
+  .yr-t-item { }
+  .yr-t-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#6b7280; margin-bottom:3px; }
+  .yr-t-value { font-size:14px; font-weight:700; color:#e8e6f0; }
+
 </style>
 </head>
 <body>
@@ -96,33 +122,7 @@
   &#9888; <strong>Cash Collection Alert:</strong> Only 15.2% of invoices paid ($784.61 collected / $15,545.13 invoiced). Outstanding: <strong>$14,760.52</strong>. Immediate follow-up required.
 </div>
 <div class="container">
-  <div class="kpi-grid">
-    <div class="kpi green">
-      <div class="label">Total GMV</div>
-      <div class="value">$15,742</div>
-      <div class="sub">Retail sale value &middot; 7 months</div>
-    </div>
-    <div class="kpi blue">
-      <div class="label">Total OpEx</div>
-      <div class="value">$6,303</div>
-      <div class="sub">All operating expenses</div>
-    </div>
-    <div class="kpi green">
-      <div class="label">Operating Profit</div>
-      <div class="value">$9,439</div>
-      <div class="sub">Cash basis &middot; 60.0% margin</div>
-    </div>
-    <div class="kpi amber">
-      <div class="label">Recurring GMV/mo</div>
-      <div class="value">$846</div>
-      <div class="sub">Excl. one-off bulk orders</div>
-    </div>
-    <div class="kpi purple">
-      <div class="label">Recurring OpEx/mo</div>
-      <div class="value">$118</div>
-      <div class="sub">Excl. event spikes</div>
-    </div>
-  </div>
+  <div class="yr-wrap"><div class="yr-block yr-25"><div class="yr-head"><span class="yr-year">2025</span><span class="yr-period">Nov–Dec · 2 months</span></div><div class="yr-metrics"><div class="yr-m"><div class="yr-ml">GMV</div><div class="yr-mv g">$1,477</div></div><div class="yr-m"><div class="yr-ml">OpEx</div><div class="yr-mv r">$269</div></div><div class="yr-m"><div class="yr-ml">Profit</div><div class="yr-mv g">$1,208</div></div><div class="yr-m"><div class="yr-ml">Margin</div><div class="yr-mv g">81.8%</div></div><div class="yr-m"><div class="yr-ml">Rec GMV/mo</div><div class="yr-mv a">$738</div></div><div class="yr-m"><div class="yr-ml">Rec OpEx/mo</div><div class="yr-mv p">$135</div></div></div><div class="yr-badge">81.8% margin</div></div><div class="yr-block yr-26"><div class="yr-head"><span class="yr-year">2026 YTD</span><span class="yr-period">Jan–May · 5 months</span></div><div class="yr-metrics"><div class="yr-m"><div class="yr-ml">GMV</div><div class="yr-mv g">$14,265</div></div><div class="yr-m"><div class="yr-ml">OpEx</div><div class="yr-mv r">$6,033</div></div><div class="yr-m"><div class="yr-ml">Profit</div><div class="yr-mv g">$8,232</div></div><div class="yr-m"><div class="yr-ml">Margin</div><div class="yr-mv b">57.7%</div></div><div class="yr-m"><div class="yr-ml">Rec GMV/mo</div><div class="yr-mv a">$917</div></div><div class="yr-m"><div class="yr-ml">Rec OpEx/mo</div><div class="yr-mv p">$147</div></div></div><div class="yr-badge">57.7% margin</div></div></div><div class="yr-total-row"><div class="yr-t-item"><div class="yr-t-label">All-Time GMV</div><div class="yr-t-value">$15,742</div></div><div class="yr-t-item"><div class="yr-t-label">All-Time OpEx</div><div class="yr-t-value">$6,303</div></div><div class="yr-t-item"><div class="yr-t-label">Cumulative Profit</div><div class="yr-t-value">$9,439</div></div><div class="yr-t-item"><div class="yr-t-label">Overall Margin</div><div class="yr-t-value">60.0%</div></div></div>
 
   <h2 class="section-title">Monthly Performance</h2>
   <div class="charts-grid">
