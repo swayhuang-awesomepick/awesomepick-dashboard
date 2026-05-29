@@ -2,1042 +2,172 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Awesomepick Revenue Dashboard</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0fdf4; color: #1a2e1a; }
-  .header { background: linear-gradient(135deg, #064e3b 0%, #065f46 100%); padding: 24px 32px; color: white; }
-  .header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
-  .header p { opacity: 0.8; font-size: 0.9rem; margin-top: 4px; }
-  .nav-links { margin-top: 12px; }
-  .nav-links a { color: #a7f3d0; text-decoration: none; font-size: 0.85rem; margin-right: 16px; }
-  .nav-links a:hover { color: white; }
-  .container { max-width: 1400px; margin: 0 auto; padding: 24px 32px; }
-  .notice { background: #fffbeb; border: 1px solid #f59e0b; border-radius: 8px; padding: 12px 16px; margin-bottom: 20px; color: #92400e; font-size: 0.9rem; }
-  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
-  .kpi-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); border-top: 4px solid; }
-  .kpi-card.green { border-color: #10b981; }
-  .kpi-card.blue { border-color: #3b82f6; }
-  .kpi-card.amber { border-color: #f59e0b; }
-  .kpi-card.red { border-color: #ef4444; }
-  .kpi-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: #6b7280; font-weight: 600; }
-  .kpi-value { font-size: 2rem; font-weight: 700; margin: 6px 0 2px; }
-  .kpi-card.green .kpi-value { color: #059669; }
-  .kpi-card.blue .kpi-value { color: #2563eb; }
-  .kpi-card.amber .kpi-value { color: #d97706; }
-  .kpi-card.red .kpi-value { color: #dc2626; }
-  .kpi-sub { font-size: 0.78rem; color: #9ca3af; }
-  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
-  .chart-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
-  .chart-card.full { grid-column: 1 / -1; }
-  .chart-title { font-size: 0.9rem; font-weight: 700; color: #374151; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .chart-wrap { position: relative; height: 280px; }
-  .filter-bar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
-  .filter-bar label { font-size: 0.8rem; font-weight: 600; color: #6b7280; }
-  .filter-bar select { padding: 6px 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.85rem; background: white; cursor: pointer; }
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-  th { background: #f9fafb; padding: 10px 12px; text-align: left; font-weight: 600; color: #374151; border-bottom: 2px solid #e5e7eb; white-space: nowrap; }
-  td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
-  tr:hover td { background: #f9fafb; }
-  .badge { padding: 3px 8px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
-  .badge-paid { background: #d1fae5; color: #065f46; }
-  .badge-pending { background: #fef3c7; color: #92400e; }
-  .badge-cancelled { background: #fee2e2; color: #991b1b; }
-  .footer { text-align: center; padding: 20px; font-size: 0.75rem; color: #9ca3af; border-top: 1px solid #e5e7eb; margin-top: 8px; }
-  .section-title { font-size: 1rem; font-weight: 700; color: #064e3b; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid #d1fae5; }
-  @media (max-width: 768px) {
-    .kpi-grid { grid-template-columns: repeat(2,1fr); }
-    .charts-grid { grid-template-columns: 1fr; }
-  }
-
-  .year-banner { margin-bottom: 24px; }
-  .year-banner-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6366f1; margin-bottom: 12px; }
-  .year-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media(max-width:600px){ .year-cards { grid-template-columns: 1fr; } }
-  .year-card { border-radius: 12px; padding: 20px; position: relative; overflow: hidden; }
-  .year-card-25 { background: linear-gradient(135deg, #1c2a1c, #1a2e20); border: 1px solid #2d5a3d; }
-  .year-card-26 { background: linear-gradient(135deg, #1e1b4b, #252060); border: 1px solid #4338ca; }
-  .year-card-header { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
-  .year-card-year { font-size: 22px; font-weight: 800; color: #fff; }
-  .year-card-25 .year-card-year { color: #6ee7b7; }
-  .year-card-26 .year-card-year { color: #a5b4fc; }
-  .year-card-sub { font-size: 11px; color: #6b7280; }
-  .year-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .ys-item { }
-  .ys-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: #6b7280; margin-bottom: 3px; }
-  .ys-value { font-size: 15px; font-weight: 700; }
-  .ys-value.green { color: #6ee7b7; }
-  .ys-value.blue { color: #93c5fd; }
-  .ys-value.amber { color: #fcd34d; }
-  .ys-value.red { color: #fca5a5; }
-  .ys-value.white { color: #e8e6f0; }
-  .year-margin-badge { margin-top: 14px; display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-  .year-card-25 .year-margin-badge { background: #064e3b; color: #6ee7b7; }
-  .year-card-26 .year-margin-badge { background: #312e81; color: #a5b4fc; }
-
-
-  .yr-wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; }
-  @media(max-width:700px){ .yr-wrap { grid-template-columns:1fr; } }
-  .yr-block { border-radius:12px; padding:20px; }
-  .yr-25 { background:linear-gradient(135deg,#0a1f0a,#0f2a14); border:1px solid #166534; }
-  .yr-26 { background:linear-gradient(135deg,#1e1b4b,#252060); border:1px solid #4338ca; }
-  .yr-head { display:flex; align-items:baseline; gap:8px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:10px; }
-  .yr-year { font-size:20px; font-weight:800; }
-  .yr-25 .yr-year { color:#6ee7b7; }
-  .yr-26 .yr-year { color:#a5b4fc; }
-  .yr-period { font-size:11px; color:#6b7280; }
-  .yr-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-  .yr-m { }
-  .yr-ml { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#6b7280; margin-bottom:3px; }
-  .yr-mv { font-size:15px; font-weight:700; }
-  .yr-mv.g { color:#6ee7b7; } .yr-mv.b { color:#93c5fd; }
-  .yr-mv.a { color:#fcd34d; } .yr-mv.r { color:#fca5a5; }
-  .yr-mv.p { color:#c4b5fd; } .yr-mv.w { color:#e8e6f0; }
-  .yr-badge { margin-top:12px; display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; }
-  .yr-25 .yr-badge { background:#064e3b; color:#6ee7b7; }
-  .yr-26 .yr-badge { background:#312e81; color:#a5b4fc; }
-  .yr-total-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:24px; background:#111827; border:1px solid #1f2937; border-radius:10px; padding:14px 18px; }
-  .yr-t-item { }
-  .yr-t-label { font-size:10px; text-transform:uppercase; letter-spacing:0.5px; color:#6b7280; margin-bottom:3px; }
-  .yr-t-value { font-size:14px; font-weight:700; color:#e8e6f0; }
-
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0fdf4;color:#1e293b}
+header{background:linear-gradient(135deg,#064e3b,#065f46);padding:28px 32px;color:#fff}
+header h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.5px}
+header p{opacity:.75;margin-top:4px;font-size:.9rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;padding:24px 32px}
+.kpi{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.kpi .label{font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;color:#64748b;margin-bottom:6px}
+.kpi .value{font-size:1.9rem;font-weight:700}
+.kpi.green .value{color:#059669}
+.kpi.blue .value{color:#2563eb}
+.kpi.amber .value{color:#d97706}
+.kpi.red .value{color:#dc2626}
+.notice{margin:0 32px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;color:#92400e;font-size:.85rem}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px 32px}
+.chart-box{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.chart-box h3{font-size:.9rem;font-weight:600;color:#374151;margin-bottom:14px}
+.chart-box.full{grid-column:span 2}
+.filters{display:flex;gap:12px;padding:0 32px 8px;flex-wrap:wrap}
+.filters select{border:1px solid #d1fae5;border-radius:6px;padding:6px 10px;font-size:.85rem;background:#fff;color:#1e293b}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#064e3b;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.3px}
+td{padding:9px 12px;border-bottom:1px solid #f0fdf4}
+tr:hover td{background:#f0fdf4}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:.75rem;font-weight:600}
+.badge.paid{background:#d1fae5;color:#065f46}
+.badge.pending{background:#fef3c7;color:#92400e}
+.badge.cancelled{background:#fee2e2;color:#991b1b}
+.table-wrap{padding:0 32px 24px;overflow-x:auto}
+footer{text-align:center;padding:16px;color:#64748b;font-size:.78rem;background:#fff;margin-top:8px}
+@media(max-width:700px){.charts{grid-template-columns:1fr}.chart-box.full{grid-column:span 1}}
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>🌿 Awesomepick Revenue Dashboard</h1>
-  <p>Invoice tracking · Partner performance · Payment status</p>
-  <div class="nav-links">
-    <a href="pnl_dashboard.html">→ P&L Dashboard</a>
-    <a href="https://swayhuang-awesomepick.github.io/awesomepick-dashboard/revenue_dashboard.html" target="_blank">↗ Live Link</a>
-  </div>
+<header>
+  <h1>📊 Awesomepick Revenue Dashboard</h1>
+  <p>Invoice tracking · Nov 2025 – May 2026* · Currency: USD</p>
+</header>
+
+<div class="kpi-grid">
+  <div class="kpi green"><div class="label">Total Invoiced</div><div class="value">$16,457</div><div style="font-size:.8rem;color:#64748b;margin-top:4px">47 non-cancelled invoices</div></div>
+  <div class="kpi blue"><div class="label">Confirmed Collected</div><div class="value">$785</div><div style="font-size:.8rem;color:#64748b;margin-top:4px">7 invoices confirmed</div></div>
+  <div class="kpi amber"><div class="label">Outstanding / Pending</div><div class="value">$15,672</div><div style="font-size:.8rem;color:#64748b;margin-top:4px">40 invoices outstanding</div></div>
+  <div class="kpi red"><div class="label">Cancelled</div><div class="value">$163</div><div style="font-size:.8rem;color:#64748b;margin-top:4px">2 invoices cancelled</div></div>
 </div>
 
-<div class="container">
+<div class="notice">⚠️ Low collection rate — less than 30% of invoices have a confirmed payment date. Consider following up on outstanding balances.</div>
 
-  <div class="notice" id="notice-banner" style="display:none">
-    ⚠️ <strong>Payment tracking alert:</strong> Only <span id="notice-pct"></span>% of invoices have a confirmed payment date. Consider following up on outstanding amounts.
-  </div>
-
-  <!-- KPI Cards -->
-  <div class="yr-wrap"><div class="yr-block yr-25"><div class="yr-head"><span class="yr-year">2025</span><span class="yr-period">Nov–Dec · 2 months</span></div><div class="yr-metrics"><div class="yr-m"><div class="yr-ml">Invoiced</div><div class="yr-mv w">$1,280</div></div><div class="yr-m"><div class="yr-ml">GMV</div><div class="yr-mv g">$1,477</div></div><div class="yr-m"><div class="yr-ml">Collected</div><div class="yr-mv b">$785</div></div><div class="yr-m"><div class="yr-ml">Outstanding</div><div class="yr-mv a">$495</div></div><div class="yr-m"><div class="yr-ml">Invoices</div><div class="yr-mv w">11</div></div><div class="yr-m"><div class="yr-ml">Collection%</div><div class="yr-mv b">61.3%</div></div></div><div class="yr-badge">61% collected</div></div><div class="yr-block yr-26"><div class="yr-head"><span class="yr-year">2026 YTD</span><span class="yr-period">Jan–May · 5 months</span></div><div class="yr-metrics"><div class="yr-m"><div class="yr-ml">Invoiced</div><div class="yr-mv w">$14,265</div></div><div class="yr-m"><div class="yr-ml">GMV</div><div class="yr-mv g">$14,265</div></div><div class="yr-m"><div class="yr-ml">Collected</div><div class="yr-mv r">$0</div></div><div class="yr-m"><div class="yr-ml">Outstanding</div><div class="yr-mv r">$14,265</div></div><div class="yr-m"><div class="yr-ml">Invoices</div><div class="yr-mv w">35</div></div><div class="yr-m"><div class="yr-ml">Collection%</div><div class="yr-mv r">0%</div></div></div><div class="yr-badge">0% collected ⚠️</div></div></div><div class="yr-total-row"><div class="yr-t-item"><div class="yr-t-label">Total Invoiced</div><div class="yr-t-value">$15,545</div></div><div class="yr-t-item"><div class="yr-t-label">Total GMV</div><div class="yr-t-value">$15,742</div></div><div class="yr-t-item"><div class="yr-t-label">Total Collected</div><div class="yr-t-value">$785</div></div><div class="yr-t-item"><div class="yr-t-label">Outstanding A/R</div><div class="yr-t-value">$14,760</div></div><div class="yr-t-item"><div class="yr-t-label">Cancelled</div><div class="yr-t-value">$163 (2 inv)</div></div><div class="yr-t-item"><div class="yr-t-label">Collection Rate</div><div class="yr-t-value">15.2%</div></div></div>
-
-  <!-- Charts Row 1 -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-title">Monthly Revenue — Collected vs Pending</div>
-      <div class="chart-wrap"><canvas id="monthlyBar"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Payment Status</div>
-      <div class="chart-wrap"><canvas id="statusDonut"></canvas></div>
-    </div>
-  </div>
-
-  <!-- Charts Row 2 -->
-  <div class="charts-grid">
-    <div class="chart-card">
-      <div class="chart-title">Top 9 Partners by Invoiced Total</div>
-      <div class="chart-wrap" style="height:320px"><canvas id="partnerBar"></canvas></div>
-    </div>
-    <div class="chart-card">
-      <div class="chart-title">Partner Revenue by Month</div>
-      <div class="chart-wrap" style="height:320px"><canvas id="partnerMonthBar"></canvas></div>
-    </div>
-  </div>
-
-  <!-- Invoice Table -->
-  <div class="chart-card" style="margin-bottom:20px">
-    <div class="section-title">Invoice Ledger</div>
-    <div class="filter-bar">
-      <label>Month:</label>
-      <select id="filterMonth" onchange="filterTable()">
-        <option value="">All</option>
-      </select>
-      <label>Status:</label>
-      <select id="filterStatus" onchange="filterTable()">
-        <option value="">All</option>
-        <option value="Paid">Paid</option>
-        <option value="Pending">Pending</option>
-        <option value="Cancelled">Cancelled</option>
-      </select>
-      <label>Partner:</label>
-      <select id="filterPartner" onchange="filterTable()">
-        <option value="">All</option>
-      </select>
-      <span id="rowCount" style="margin-left:auto;font-size:0.8rem;color:#6b7280;"></span>
-    </div>
-    <div class="table-wrap">
-      <table id="invoiceTable">
-        <thead>
-          <tr>
-            <th>Invoice No</th>
-            <th>Date</th>
-            <th>Partner</th>
-            <th>Channel</th>
-            <th>Invoiced (USD)</th>
-            <th>Retail GMV</th>
-            <th>Status</th>
-            <th>Month</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
+<div class="charts">
+  <div class="chart-box"><h3>Monthly Revenue — Collected vs Pending</h3><canvas id="monthlyBar" height="220"></canvas></div>
+  <div class="chart-box"><h3>Top Partners by Invoice Total</h3><canvas id="topPartners" height="220"></canvas></div>
+  <div class="chart-box full"><h3>Partner × Month Stacked</h3><canvas id="partnerMonth" height="180"></canvas></div>
+  <div class="chart-box" style="max-width:320px;margin:0 auto"><h3>Payment Status</h3><canvas id="donut" height="220"></canvas></div>
+  <div class="chart-box"></div>
 </div>
 
-<div class="footer">
-  Last updated: 2026-05-27 &nbsp;·&nbsp; Next auto-update: 2026-06-15 &nbsp;·&nbsp; Currency: USD &nbsp;·&nbsp; * May 2026 partial
+<div class="filters">
+  <select id="fMonth" onchange="filterTable()"><option value="">All Months</option>
+  <option value="2025.11">Nov 2025</option><option value="2025.12">Dec 2025</option><option value="2026.01">Jan 2026</option><option value="2026.02">Feb 2026</option><option value="2026.03">Mar 2026</option><option value="2026.04">Apr 2026</option><option value="2026.05">May 2026*</option>
+  </select>
+  <select id="fStatus" onchange="filterTable()">
+    <option value="">All Status</option>
+    <option value="Paid">Paid</option>
+    <option value="Pending">Pending</option>
+    <option value="Cancelled">Cancelled</option>
+  </select>
+  <select id="fPartner" onchange="filterTable()"><option value="">All Partners</option>
+  <option value="APSARA RESORT">APSARA RESORT</option><option value="Air Cambodia">Air Cambodia</option><option value="Aurelien">Aurelien</option><option value="CCU BANK">CCU BANK</option><option value="CheckINN">CheckINN</option><option value="DUN-QIAN HOTEL">DUN-QIAN HOTEL</option><option value="Dara Hotel">Dara Hotel</option><option value="General customer">General customer</option><option value="Hyatt Regency Phnom Penh">Hyatt Regency Phnom Penh</option><option value="K3M">K3M</option><option value="LA CASA">LA CASA</option><option value="LACASA">LACASA</option><option value="Oakwood">Oakwood</option><option value="PHILLIP BANK">PHILLIP BANK</option><option value="Shangri-la">Shangri-la</option><option value="Smile Shop">Smile Shop</option><option value="TSUTAYA">TSUTAYA</option><option value="The Weaver's Tale">The Weaver's Tale</option><option value="Triangle Tyre Co.">Triangle Tyre Co.</option><option value="Vattanac Golf Resort">Vattanac Golf Resort</option>
+  </select>
 </div>
+
+<div class="table-wrap">
+<table id="invoiceTable">
+<thead><tr><th>Invoice No</th><th>Date</th><th>Partner</th><th>Invoiced</th><th>Retail GMV</th><th>Status</th><th>Month</th></tr></thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+<footer>Last updated: 2026-05-29 &nbsp;·&nbsp; Next auto-update: Jun 15, 2026 &nbsp;·&nbsp; Currency: USD &nbsp;·&nbsp; * May 2026 partial month</footer>
 
 <script>
-const ALL_INVOICES = [
-  {
-    "id": "CI25-00026",
-    "date": "2025-11-01",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 58.8,
-    "gmv": 84,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00027",
-    "date": "2025-11-01",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 8.4,
-    "gmv": 12,
-    "paid": true,
-    "paid_date": "2025.11.23",
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00028",
-    "date": "2025-11-01",
-    "partner": "Smile Shop",
-    "channel": "Retail Chain",
-    "total": 126,
-    "gmv": 180,
-    "paid": true,
-    "paid_date": "2025.11.22",
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00029",
-    "date": "2025-11-01",
-    "partner": "Smile Shop",
-    "channel": "Retail Chain",
-    "total": 266.35,
-    "gmv": 380.5,
-    "paid": true,
-    "paid_date": "2025.11.22",
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00030",
-    "date": "2025-11-29",
-    "partner": "Dara Hotel",
-    "channel": "Hotel",
-    "total": 88,
-    "gmv": 88,
-    "paid": true,
-    "paid_date": "2025.12.01",
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "TI25-0026",
-    "date": "2025-11-01",
-    "partner": "Oakwood",
-    "channel": "Hotel",
-    "total": 21.82,
-    "gmv": 21.82,
-    "paid": true,
-    "paid_date": "2025.12.18",
-    "cancelled": false,
-    "month": "2025.11",
-    "month_label": "Nov 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00033",
-    "date": "2025-11-30",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 25.2,
-    "gmv": 25.2,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2025.12",
-    "month_label": "Dec 2025",
-    "current": false
-  },
-  {
-    "id": "TI25-0027",
-    "date": "2025-11-30",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 15.4,
-    "gmv": 15.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2025.12",
-    "month_label": "Dec 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00032",
-    "date": "2025-11-30",
-    "partner": "Smile Shop",
-    "channel": "Retail Chain",
-    "total": 260.4,
-    "gmv": 260.4,
-    "paid": true,
-    "paid_date": "2025.12.10",
-    "cancelled": false,
-    "month": "2025.12",
-    "month_label": "Dec 2025",
-    "current": false
-  },
-  {
-    "id": "TI25-0028",
-    "date": "2025-12-01",
-    "partner": "Oakwood",
-    "channel": "Hotel",
-    "total": 13.64,
-    "gmv": 13.64,
-    "paid": true,
-    "paid_date": "2025.12.18",
-    "cancelled": false,
-    "month": "2025.12",
-    "month_label": "Dec 2025",
-    "current": false
-  },
-  {
-    "id": "TI25-0029",
-    "date": "2025-12-01",
-    "partner": "K3M",
-    "channel": "Distributor",
-    "total": 396,
-    "gmv": 396,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2025.12",
-    "month_label": "Dec 2025",
-    "current": false
-  },
-  {
-    "id": "CI25-00034/CI26-00001",
-    "date": "2026-01-31",
-    "partner": "Smile Shop",
-    "channel": "Retail Chain",
-    "total": 512.4,
-    "gmv": 512.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI25-00035/CI26-00002",
-    "date": "2026-01-31",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 560,
-    "gmv": 560,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00003",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 6,
-    "gmv": 6,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00004",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 6,
-    "gmv": 6,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00005",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 16,
-    "gmv": 16,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00006",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 88,
-    "gmv": 88,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0031",
-    "date": "2025-12-31",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 90.38,
-    "gmv": 90.38,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0032",
-    "date": "2026-01-09",
-    "partner": "PHILLIP BANK",
-    "channel": "Corporate & Other",
-    "total": 480,
-    "gmv": 480,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0033",
-    "date": "2026-01-15",
-    "partner": "CCU BANK",
-    "channel": "Corporate & Other",
-    "total": 88,
-    "gmv": 88,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0034",
-    "date": "2026-01-29",
-    "partner": "K3M",
-    "channel": "Distributor",
-    "total": 3711.4,
-    "gmv": 3711.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0035",
-    "date": "2026-01-29",
-    "partner": "Shangri-la",
-    "channel": "Hotel",
-    "total": 203.28,
-    "gmv": 203.28,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0036",
-    "date": "2026-01-29",
-    "partner": "Air Cambodia",
-    "channel": "Corporate & Other",
-    "total": 1434.4,
-    "gmv": 1434.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "CI25-00036/CI26-00007",
-    "date": "2026-01-31",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 58.4,
-    "gmv": 58.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00008",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 38,
-    "gmv": 38,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00009",
-    "date": "2026-01-31",
-    "partner": "General customer",
-    "channel": "Walk-in",
-    "total": 6,
-    "gmv": 6,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0037",
-    "date": "2026-01-30",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 32.21,
-    "gmv": 32.21,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0038/TI26-0001",
-    "date": "2026-02-02",
-    "partner": "K3M",
-    "channel": "Distributor",
-    "total": 528,
-    "gmv": 528,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00010",
-    "date": "2026-02-27",
-    "partner": "Smile Shop",
-    "channel": "Retail Chain",
-    "total": 720,
-    "gmv": 720,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00011",
-    "date": "2026-02-27",
-    "partner": "LA CASA",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 80,
-    "gmv": 80,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0003",
-    "date": "2026-02-27",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 103.1,
-    "gmv": 103.1,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00012",
-    "date": "2026-02-27",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 27.3,
-    "gmv": 27.3,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0004",
-    "date": "2026-03-02",
-    "partner": "Shangri-la",
-    "channel": "Hotel",
-    "total": 81.3,
-    "gmv": 81.3,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00013",
-    "date": "2026-03-02",
-    "partner": "Aurelien",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 66,
-    "gmv": 66,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.03",
-    "month_label": "Mar 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00014",
-    "date": "2026-03-04",
-    "partner": "LACASA",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 80,
-    "gmv": 80,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00015",
-    "date": "2026-03-24",
-    "partner": "CheckINN",
-    "channel": "Hotel",
-    "total": 9,
-    "gmv": 9,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0005",
-    "date": "2026-03-30",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 92.91,
-    "gmv": 92.91,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0006",
-    "date": "2026-04-01",
-    "partner": "Shangri-la",
-    "channel": "Hotel",
-    "total": 138.24,
-    "gmv": 138.24,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0007",
-    "date": "2026-04-07",
-    "partner": "Vattanac Golf Resort",
-    "channel": "Hotel",
-    "total": 184.8,
-    "gmv": 184.8,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "CI26-00016",
-    "date": "2026-03-30",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 22.4,
-    "gmv": 22.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0008",
-    "date": "2026-04-20",
-    "partner": "Hyatt Regency Phnom Penh",
-    "channel": "Hotel",
-    "total": 484,
-    "gmv": 484,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.04",
-    "month_label": "Apr 2026",
-    "current": false
-  },
-  {
-    "id": "TI26-0009",
-    "date": "2026-04-30",
-    "partner": "TSUTAYA",
-    "channel": "Retail Chain",
-    "total": 85.4,
-    "gmv": 85.4,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.05",
-    "month_label": "May 2026*",
-    "current": true
-  },
-  {
-    "id": "CI26-00017",
-    "date": "2026-04-30",
-    "partner": "The Weaver's Tale",
-    "channel": "Caf\u00e9/Boutique",
-    "total": 4.2,
-    "gmv": 4.2,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.05",
-    "month_label": "May 2026*",
-    "current": true
-  },
-  {
-    "id": "TI26-0010",
-    "date": "2026-05-04",
-    "partner": "APSARA RESORT",
-    "channel": "Hotel",
-    "total": 4000,
-    "gmv": 4000,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.05",
-    "month_label": "May 2026*",
-    "current": true
-  },
-  {
-    "id": "CI26-00018",
-    "date": "2026-05-25",
-    "partner": "Triangle Tyre Co., Ltd",
-    "channel": "Corporate & Other",
-    "total": 108,
-    "gmv": 108,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.05",
-    "month_label": "May 2026*",
-    "current": true
-  },
-  {
-    "id": "TI26-0011",
-    "date": "2026-05-27",
-    "partner": "Vattanac Golf Resort",
-    "channel": "Hotel",
-    "total": 120,
-    "gmv": 120,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": false,
-    "month": "2026.05",
-    "month_label": "May 2026*",
-    "current": true
-  },
-  {
-    "id": "TI25-0030",
-    "date": "2025-12-31",
-    "partner": "Shangri-la",
-    "channel": "Hotel",
-    "total": 81.3,
-    "gmv": 81.3,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": true,
-    "month": "2026.01",
-    "month_label": "Jan 2026",
-    "current": false
-  },
-  {
-    "id": "TI25-0039/TI26-0002",
-    "date": "2026-02-06",
-    "partner": "Shangri-la",
-    "channel": "Hotel",
-    "total": 81.3,
-    "gmv": 81.3,
-    "paid": false,
-    "paid_date": null,
-    "cancelled": true,
-    "month": "2026.02",
-    "month_label": "Feb 2026",
-    "current": false
-  }
-];
+const MONTHS = ["Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026*"];
+const COLLECTED = [510.57, 274.04, 0, 0, 0, 0, 0];
+const PENDING = [58.8, 436.6, 7195.86, 662.61, 1077.7, 1011.35, 5229.45];
+const TOP_PARTNERS = [["K3M", 4635.4], ["APSARA RESORT", 4400.0], ["Smile Shop", 1885.15], ["Air Cambodia", 1434.4], ["The Weaver's Tale", 764.7], ["Vattanac Golf Resort", 504.8], ["Hyatt Regency Phnom Penh", 484.0], ["PHILLIP BANK", 480.0], ["Shangri-la", 422.82]];
+const PARTNER_MONTH = {"K3M": [0, 396.0, 3711.4, 528.0, 0, 0, 0], "APSARA RESORT": [0, 0, 0, 0, 0, 0, 4400.0], "Smile Shop": [392.35, 260.4, 512.4, 0, 720.0, 0, 0], "Air Cambodia": [0, 0, 1434.4, 0, 0, 0, 0], "The Weaver's Tale": [67.2, 25.2, 560.0, 58.4, 27.3, 22.4, 4.2], "Vattanac Golf Resort": [0, 0, 0, 0, 0, 184.8, 320.0], "Hyatt Regency Phnom Penh": [0, 0, 0, 0, 0, 484.0, 0], "PHILLIP BANK": [0, 0, 480.0, 0, 0, 0, 0], "Shangri-la": [0, 0, 203.28, 0, 81.3, 138.24, 0]};
+const INVOICES = [{"inv_no": "CI25-00026", "date": "2025-10-31", "partner": "The Weaver's Tale", "inv_amt": 58.8, "gmv": 84.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2025.11"}, {"inv_no": "CI25-00027", "date": "2025-10-31", "partner": "The Weaver's Tale", "inv_amt": 8.4, "gmv": 12.0, "status": "Paid", "paid_label": "\u2713 Paid 2025-11-23", "channel": "Caf\u00e9/Boutique", "month": "2025.11"}, {"inv_no": "CI25-00028", "date": "2025-10-31", "partner": "Smile Shop", "inv_amt": 126.0, "gmv": 180.0, "status": "Paid", "paid_label": "\u2713 Paid 2025-11-22", "channel": "Retail Chain", "month": "2025.11"}, {"inv_no": "CI25-00029", "date": "2025-10-31", "partner": "Smile Shop", "inv_amt": 266.35, "gmv": 380.5, "status": "Paid", "paid_label": "\u2713 Paid 2025-11-22", "channel": "Retail Chain", "month": "2025.11"}, {"inv_no": "CI25-00030", "date": "2025-11-29", "partner": "Dara Hotel", "inv_amt": 88.0, "gmv": 88.0, "status": "Paid", "paid_label": "\u2713 Paid 2025-12-01", "channel": "Hotel", "month": "2025.11"}, {"inv_no": "TI25-0026", "date": "2025-11-01", "partner": "Oakwood", "inv_amt": 21.82, "gmv": 21.82, "status": "Paid", "paid_label": "\u2713 Paid 2025-12-18", "channel": "Hotel", "month": "2025.11"}, {"inv_no": "CI25-00033", "date": "2025-11-30", "partner": "The Weaver's Tale", "inv_amt": 25.2, "gmv": 25.2, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2025.12"}, {"inv_no": "TI25-0027", "date": "2025-11-30", "partner": "TSUTAYA", "inv_amt": 15.4, "gmv": 15.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2025.12"}, {"inv_no": "CI25-00032", "date": "2025-11-30", "partner": "Smile Shop", "inv_amt": 260.4, "gmv": 260.4, "status": "Paid", "paid_label": "\u2713 Paid 2025-12-10", "channel": "Retail Chain", "month": "2025.12"}, {"inv_no": "TI25-0028", "date": "2025-12-01", "partner": "Oakwood", "inv_amt": 13.64, "gmv": 13.64, "status": "Paid", "paid_label": "\u2713 Paid 2025-12-18", "channel": "Hotel", "month": "2025.12"}, {"inv_no": "TI25-0029", "date": "2025-12-01", "partner": "K3M", "inv_amt": 396.0, "gmv": 396.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Distributor", "month": "2025.12"}, {"inv_no": "CI26-00001", "date": "2025-12-31", "partner": "Smile Shop", "inv_amt": 512.4, "gmv": 512.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.01"}, {"inv_no": "CI26-00002", "date": "2025-12-31", "partner": "The Weaver's Tale", "inv_amt": 560.0, "gmv": 560.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.01"}, {"inv_no": "CI26-00003", "date": "2026-01-31", "partner": "General customer", "inv_amt": 6.0, "gmv": 6.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.01"}, {"inv_no": "CI26-00004", "date": "2026-01-31", "partner": "General customer", "inv_amt": 6.0, "gmv": 6.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.01"}, {"inv_no": "CI26-00005", "date": "2026-01-31", "partner": "General customer", "inv_amt": 16.0, "gmv": 16.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.01"}, {"inv_no": "CI26-00006", "date": "2026-01-31", "partner": "General customer", "inv_amt": 88.0, "gmv": 88.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.01"}, {"inv_no": "TI25-0030", "date": "2025-12-31", "partner": "Shangri-la", "inv_amt": 81.3, "gmv": 81.3, "status": "Cancelled", "paid_label": "\u2717 Cancelled", "channel": "Hotel", "month": "2026.01"}, {"inv_no": "TI25-0031", "date": "2025-12-31", "partner": "TSUTAYA", "inv_amt": 90.38, "gmv": 90.38, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.01"}, {"inv_no": "TI25-0032", "date": "2026-01-09", "partner": "PHILLIP BANK", "inv_amt": 480.0, "gmv": 480.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Corporate & Other", "month": "2026.01"}, {"inv_no": "TI25-0033", "date": "2026-01-15", "partner": "CCU BANK", "inv_amt": 88.0, "gmv": 88.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Corporate & Other", "month": "2026.01"}, {"inv_no": "TI25-0034", "date": "2026-01-29", "partner": "K3M", "inv_amt": 3711.4, "gmv": 3711.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Distributor", "month": "2026.01"}, {"inv_no": "TI25-0035", "date": "2026-01-29", "partner": "Shangri-la", "inv_amt": 203.28, "gmv": 203.28, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.01"}, {"inv_no": "TI25-0036", "date": "2026-01-29", "partner": "Air Cambodia", "inv_amt": 1434.4, "gmv": 1434.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Corporate & Other", "month": "2026.01"}, {"inv_no": "CI26-00007", "date": "2026-01-31", "partner": "The Weaver's Tale", "inv_amt": 58.4, "gmv": 58.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.02"}, {"inv_no": "CI26-00008", "date": "2026-01-31", "partner": "General customer", "inv_amt": 38.0, "gmv": 38.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.02"}, {"inv_no": "CI26-00009", "date": "2026-01-31", "partner": "General customer", "inv_amt": 6.0, "gmv": 6.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Walk-in", "month": "2026.02"}, {"inv_no": "TI25-0037", "date": "2026-01-30", "partner": "TSUTAYA", "inv_amt": 32.21, "gmv": 32.21, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.02"}, {"inv_no": "TI26-0001", "date": "2026-02-02", "partner": "K3M", "inv_amt": 528.0, "gmv": 528.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Distributor", "month": "2026.02"}, {"inv_no": "TI26-0002", "date": "2026-02-06", "partner": "Shangri-la", "inv_amt": 81.3, "gmv": 81.3, "status": "Cancelled", "paid_label": "\u2717 Cancelled", "channel": "Hotel", "month": "2026.02"}, {"inv_no": "CI26-00010", "date": "2026-02-27", "partner": "Smile Shop", "inv_amt": 720.0, "gmv": 720.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.03"}, {"inv_no": "CI26-00011", "date": "2026-02-27", "partner": "LA CASA", "inv_amt": 80.0, "gmv": 80.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.03"}, {"inv_no": "TI26-0003", "date": "2026-02-27", "partner": "TSUTAYA", "inv_amt": 103.1, "gmv": 103.1, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.03"}, {"inv_no": "CI26-00012", "date": "2026-02-27", "partner": "The Weaver's Tale", "inv_amt": 27.3, "gmv": 27.3, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.03"}, {"inv_no": "TI26-0004", "date": "2026-03-02", "partner": "Shangri-la", "inv_amt": 81.3, "gmv": 81.3, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.03"}, {"inv_no": "CI26-00013", "date": "2026-03-02", "partner": "Aurelien", "inv_amt": 66.0, "gmv": 66.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.03"}, {"inv_no": "CI26-00014", "date": "2026-03-04", "partner": "LACASA", "inv_amt": 80.0, "gmv": 80.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.04"}, {"inv_no": "CI26-00015", "date": "2026-03-30", "partner": "CheckINN", "inv_amt": 9.0, "gmv": 9.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.04"}, {"inv_no": "TI26-0005", "date": "2026-03-30", "partner": "TSUTAYA", "inv_amt": 92.91, "gmv": 92.91, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.04"}, {"inv_no": "TI26-0006", "date": "2026-04-01", "partner": "Shangri-la", "inv_amt": 138.24, "gmv": 138.24, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.04"}, {"inv_no": "TI26-0007", "date": "2026-04-07", "partner": "Vattanac Golf Resort", "inv_amt": 184.8, "gmv": 184.8, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.04"}, {"inv_no": "CI26-00016", "date": "2026-03-30", "partner": "The Weaver's Tale", "inv_amt": 22.4, "gmv": 22.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.04"}, {"inv_no": "TI26-0008", "date": "2026-04-20", "partner": "Hyatt Regency Phnom Penh", "inv_amt": 484.0, "gmv": 484.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.04"}, {"inv_no": "TI26-0009", "date": "2026-04-30", "partner": "TSUTAYA", "inv_amt": 85.4, "gmv": 85.4, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Retail Chain", "month": "2026.05"}, {"inv_no": "CI26-00017", "date": "2026-04-30", "partner": "The Weaver's Tale", "inv_amt": 4.2, "gmv": 4.2, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Caf\u00e9/Boutique", "month": "2026.05"}, {"inv_no": "TI26-0010", "date": "2026-05-04", "partner": "APSARA RESORT", "inv_amt": 4400.0, "gmv": 4400.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.05"}, {"inv_no": "CI26-00018", "date": "2026-05-25", "partner": "Triangle Tyre Co.", "inv_amt": 108.0, "gmv": 108.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Corporate & Other", "month": "2026.05"}, {"inv_no": "TI26-0011", "date": "2026-05-29", "partner": "Vattanac Golf Resort", "inv_amt": 320.0, "gmv": 320.0, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.05"}, {"inv_no": "TI26-0012", "date": "2026-05-29", "partner": "DUN-QIAN HOTEL", "inv_amt": 311.85, "gmv": 311.85, "status": "Pending", "paid_label": "\u23f3 Pending", "channel": "Hotel", "month": "2026.05"}];
 
-const MONTH_ORDER = ["2025.11", "2025.12", "2026.01", "2026.02", "2026.03", "2026.04", "2026.05"];
-const MONTH_LABELS = {"2025.11": "Nov 2025", "2025.12": "Dec 2025", "2026.01": "Jan 2026", "2026.02": "Feb 2026", "2026.03": "Mar 2026", "2026.04": "Apr 2026", "2026.05": "May 2026*"};
-
-const fmt = v => '$' + (+v).toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
-const fmt2 = v => '$' + (+v).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-
-// Compute KPIs
-const active = ALL_INVOICES.filter(i => !i.cancelled);
-const cancelled = ALL_INVOICES.filter(i => i.cancelled);
-const paid = active.filter(i => i.paid);
-
-const totalInvoiced = active.reduce((s,i) => s+i.total, 0);
-const totalCollected = paid.reduce((s,i) => s+i.total, 0);
-const totalOutstanding = totalInvoiced - totalCollected;
-const totalCancelled = cancelled.reduce((s,i) => s+i.total, 0);
-const paymentRate = (paid.length / active.length * 100).toFixed(1);
-
-document.getElementById('kpi-invoiced').textContent = fmt(totalInvoiced);
-document.getElementById('kpi-invoiced-sub').textContent = active.length + ' invoices';
-document.getElementById('kpi-collected').textContent = fmt(totalCollected);
-document.getElementById('kpi-collected-sub').textContent = paid.length + ' of ' + active.length + ' paid (' + paymentRate + '%)';
-document.getElementById('kpi-outstanding').textContent = fmt(totalOutstanding);
-document.getElementById('kpi-cancelled').textContent = fmt(totalCancelled);
-
-// Notice banner
-if (paid.length / active.length < 0.30) {
-  document.getElementById('notice-banner').style.display = 'block';
-  document.getElementById('notice-pct').textContent = paymentRate;
-}
-
-// ── CHART 1: Monthly Bar ──
-const mLabels = MONTH_ORDER.map(m => MONTH_LABELS[m]);
-const mCollected = MONTH_ORDER.map(m => {
-  const invs = active.filter(i => i.month === m && i.paid);
-  return invs.reduce((s,i) => s+i.total, 0);
-});
-const mPending = MONTH_ORDER.map(m => {
-  const invs = active.filter(i => i.month === m && !i.paid);
-  return invs.reduce((s,i) => s+i.total, 0);
-});
-const isCurrentMonth = m => m === '2026.05';
-const mColors = MONTH_ORDER.map(m => isCurrentMonth(m) ? '#f59e0b' : '#3b82f6');
-
-new Chart(document.getElementById('monthlyBar'), {
-  type: 'bar',
-  data: {
-    labels: mLabels,
-    datasets: [
-      { label: 'Collected', data: mCollected, backgroundColor: '#10b981', borderRadius: 4 },
-      { label: 'Pending', data: mPending, backgroundColor: MONTH_ORDER.map(m => isCurrentMonth(m) ? '#f59e0b88' : '#3b82f688'), borderRadius: 4 }
+// Monthly bar chart
+new Chart(document.getElementById('monthlyBar'),{
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      {label:'Collected',data:COLLECTED,backgroundColor:'#059669',stack:'a'},
+      {label:'Pending',data:PENDING,backgroundColor:'#93c5fd',stack:'a'}
     ]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top', labels: { font: { size: 11 } } } },
-    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { callback: v => '$'+v.toLocaleString() } } }
-  }
+  options:{responsive:true,plugins:{legend:{position:'top'}},scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'$'+v.toLocaleString()}}}}
 });
 
-// ── CHART 2: Status Donut ──
-new Chart(document.getElementById('statusDonut'), {
-  type: 'doughnut',
-  data: {
-    labels: ['Paid', 'Pending', 'Cancelled'],
-    datasets: [{ data: [totalCollected, totalOutstanding, totalCancelled], backgroundColor: ['#10b981','#f59e0b','#ef4444'], borderWidth: 2, borderColor: '#fff' }]
+// Top partners horizontal bar
+new Chart(document.getElementById('topPartners'),{
+  type:'bar',
+  data:{
+    labels:TOP_PARTNERS.map(p=>p[0]),
+    datasets:[{label:'Invoice Total',data:TOP_PARTNERS.map(p=>p[1]),backgroundColor:'#065f46'}]
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    cutout: '60%',
-    plugins: {
-      legend: { position: 'bottom', labels: { font: { size: 11 } } },
-      tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + fmt(ctx.raw) } }
-    }
-  }
+  options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString()}}}}
 });
 
-// ── CHART 3: Top Partners ──
-const partnerTotals = {};
-active.forEach(i => { partnerTotals[i.partner] = (partnerTotals[i.partner]||0) + i.total; });
-const sorted = Object.entries(partnerTotals).sort((a,b) => b[1]-a[1]).slice(0,9);
-new Chart(document.getElementById('partnerBar'), {
-  type: 'bar',
-  data: {
-    labels: sorted.map(([p])=>p),
-    datasets: [{ label: 'Invoiced', data: sorted.map(([,v])=>v), backgroundColor: '#10b981cc', borderColor: '#059669', borderWidth: 1, borderRadius: 4 }]
-  },
-  options: {
-    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: { x: { ticks: { callback: v => '$'+v.toLocaleString() } }, y: { grid: { display: false } } }
-  }
-});
-
-// ── CHART 4: Partner × Month ──
-const topPartners = Object.entries(partnerTotals).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([p])=>p);
-const colors7 = ['#064e3b','#10b981','#3b82f6','#8b5cf6','#f59e0b','#ef4444','#6b7280'];
-new Chart(document.getElementById('partnerMonthBar'), {
-  type: 'bar',
-  data: {
-    labels: mLabels,
-    datasets: topPartners.map((p,i) => ({
-      label: p,
-      data: MONTH_ORDER.map(m => active.filter(inv=>inv.month===m&&inv.partner===p).reduce((s,inv)=>s+inv.total,0)),
-      backgroundColor: colors7[i],
-      borderRadius: 3
+// Partner × Month stacked
+const partners = TOP_PARTNERS.map(p=>p[0]);
+const colors = ['#064e3b','#065f46','#047857','#059669','#10b981','#34d399','#6ee7b7','#a7f3d0','#d1fae5'];
+new Chart(document.getElementById('partnerMonth'),{
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets:partners.map((p,i)=>({
+      label:p,
+      data:PARTNER_MONTH[p]||MONTHS.map(()=>0),
+      backgroundColor:colors[i%colors.length],
+      stack:'a'
     }))
   },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } } },
-    scales: { x: { stacked: true, grid: { display: false } }, y: { stacked: true, ticks: { callback: v => '$'+v.toLocaleString() } } }
-  }
+  options:{responsive:true,scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'$'+v.toLocaleString()}}}}
 });
 
-// ── TABLE ──
-const filterMonth = document.getElementById('filterMonth');
-const filterStatus = document.getElementById('filterStatus');
-const filterPartner = document.getElementById('filterPartner');
+// Donut
+const paid=7, pending=40, cancelled=2;
+new Chart(document.getElementById('donut'),{
+  type:'doughnut',
+  data:{
+    labels:['Paid','Pending','Cancelled'],
+    datasets:[{data:[paid,pending,cancelled],backgroundColor:['#059669','#fbbf24','#ef4444']}]
+  },
+  options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+});
 
-// Populate filters
-const allMonths = [...new Set(ALL_INVOICES.map(i=>i.month_label))];
-const allPartners = [...new Set(ALL_INVOICES.map(i=>i.partner))].sort();
-allMonths.forEach(m => { const o=document.createElement('option'); o.value=m; o.textContent=m; filterMonth.appendChild(o); });
-allPartners.forEach(p => { const o=document.createElement('option'); o.value=p; o.textContent=p; filterPartner.appendChild(o); });
-
-function getStatus(inv) {
-  if (inv.cancelled) return 'Cancelled';
-  if (inv.paid) return 'Paid';
-  return 'Pending';
-}
-
-function filterTable() {
-  const mf = filterMonth.value;
-  const sf = filterStatus.value;
-  const pf = filterPartner.value;
-  const filtered = ALL_INVOICES.filter(i => {
-    if (mf && i.month_label !== mf) return false;
-    if (sf && getStatus(i) !== sf) return false;
-    if (pf && i.partner !== pf) return false;
-    return true;
-  });
-  renderTable(filtered);
-}
-
+// Invoice table
 function renderTable(rows) {
-  document.getElementById('rowCount').textContent = rows.length + ' invoices';
-  const tbody = document.getElementById('tableBody');
-  tbody.innerHTML = rows.map(i => {
-    const st = getStatus(i);
-    let badge = '';
-    if (st === 'Paid') badge = '<span class="badge badge-paid">✓ Paid ' + (i.paid_date||'') + '</span>';
-    else if (st === 'Cancelled') badge = '<span class="badge badge-cancelled">✗ Cancelled</span>';
-    else badge = '<span class="badge badge-pending">⏳ Pending</span>';
+  const tb = document.getElementById('tableBody');
+  tb.innerHTML = rows.map(r => {
+    const badge = r.status==='Paid'?'paid':r.status==='Cancelled'?'cancelled':'pending';
     return `<tr>
-      <td><code style="font-size:0.78rem">${i.id}</code></td>
-      <td>${i.date}</td>
-      <td>${i.partner}</td>
-      <td><span style="font-size:0.75rem;background:#f0fdf4;color:#065f46;padding:2px 6px;border-radius:4px">${i.channel}</span></td>
-      <td style="text-align:right;font-weight:600">${i.total.toFixed(2)}</td>
-      <td style="text-align:right;color:#6b7280">${i.gmv.toFixed(2)}</td>
-      <td>${badge}</td>
-      <td style="color:#6b7280;font-size:0.78rem">${i.month_label}</td>
+      <td>${r.inv_no}</td><td>${r.date}</td><td>${r.partner}</td>
+      <td>$${r.inv_amt.toFixed(2)}</td><td>$${r.gmv.toFixed(2)}</td>
+      <td><span class="badge ${badge}">${r.paid_label}</span></td>
+      <td>${r.month}</td>
     </tr>`;
   }).join('');
 }
 
-filterTable();
+function filterTable() {
+  const m = document.getElementById('fMonth').value;
+  const s = document.getElementById('fStatus').value;
+  const p = document.getElementById('fPartner').value;
+  renderTable(INVOICES.filter(r =>
+    (!m || r.month===m) && (!s || r.status===s) && (!p || r.partner===p)
+  ));
+}
+renderTable(INVOICES);
 </script>
 </body>
 </html>
