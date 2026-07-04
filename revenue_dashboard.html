@@ -35,16 +35,16 @@ footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
 <body>
 <header>
   <h1>📊 Awesomepick Revenue Dashboard</h1>
-  <p>Data through Jul 4, 2026 &nbsp;·&nbsp; Jul 2026 * = partial month &nbsp;·&nbsp; Auto-updated Jul 4, 2026</p>
+  <p>Data through Jul 4, 2026 (2026 YTD only) &nbsp;·&nbsp; Jul 2026 * = partial month &nbsp;·&nbsp; Auto-updated Jul 4, 2026</p>
 </header>
-<div class="warn">⚠️ Paid Rate is 13.2% — significant AR outstanding. Follow up required.</div>
+<div class="warn">🚨 Paid Rate is 0% for 2026 YTD — $17,378 outstanding, not a single 2026 invoice confirmed paid yet.</div>
 <div class="kpi-grid">
-  <div class="kpi green"><div class="kpi-lbl">Total Invoiced</div><div class="kpi-val">$18,748</div></div>
-  <div class="kpi green"><div class="kpi-lbl">Total GMV</div><div class="kpi-val">$18,945</div></div>
-  <div class="kpi amber"><div class="kpi-lbl">Confirmed Collected</div><div class="kpi-val">$785</div></div>
-  <div class="kpi red"><div class="kpi-lbl">Outstanding AR</div><div class="kpi-val">$17,963</div></div>
-  <div class="kpi slate"><div class="kpi-lbl">Cancelled</div><div class="kpi-val">$163</div></div>
-  <div class="kpi red"><div class="kpi-lbl">Paid Rate</div><div class="kpi-val">13.2%</div><div style="font-size:11px;color:#94a3b8">7 of 53 invoices</div></div>
+  <div class="kpi green"><div class="kpi-lbl">Total Invoiced</div><div class="kpi-val">$17,378</div></div>
+  <div class="kpi green"><div class="kpi-lbl">Total GMV</div><div class="kpi-val">$17,378</div></div>
+  <div class="kpi amber"><div class="kpi-lbl">Confirmed Collected</div><div class="kpi-val">$0</div></div>
+  <div class="kpi red"><div class="kpi-lbl">Outstanding AR</div><div class="kpi-val">$17,378</div></div>
+  <div class="kpi slate"><div class="kpi-lbl">Cancelled</div><div class="kpi-val">$81</div></div>
+  <div class="kpi red"><div class="kpi-lbl">Paid Rate</div><div class="kpi-val">0.0%</div><div style="font-size:11px;color:#94a3b8">0 of 41 invoices</div></div>
 </div>
 
 <div class="charts">
@@ -52,12 +52,13 @@ footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
   <div class="chart-card"><h3>Payment Status</h3><canvas id="c2"></canvas></div>
   <div class="chart-card"><h3>Top 9 Partners (GMV)</h3><canvas id="c3"></canvas></div>
   <div class="chart-card"><h3>Revenue by Channel</h3><canvas id="c4"></canvas></div>
+  <div class="chart-card"><h3>Revenue by Product Line</h3><canvas id="c6"></canvas><div style="font-size:11px;color:#94a3b8;margin-top:8px">Based on 35 of 41 invoices with item-level detail — pre-VAT line revenue</div></div>
   <div class="chart-card wide"><h3>Partner GMV by Month × Channel</h3><canvas id="c5"></canvas></div>
 </div>
 
 <div class="filters">
   <select id="fMonth" onchange="filterTable()"><option value="">All Months</option>
-    <option>Nov 2025</option><option>Dec 2025</option><option>Jan 2026</option><option>Feb 2026</option><option>Mar 2026</option><option>Apr 2026</option><option>May 2026</option><option>Jun 2026</option><option>Jul 2026 *</option>
+    <option>Jan 2026</option><option>Feb 2026</option><option>Mar 2026</option><option>Apr 2026</option><option>May 2026</option><option>Jun 2026</option><option>Jul 2026 *</option>
   </select>
   <select id="fChan" onchange="filterTable()"><option value="">All Channels</option>
     <option>Hotel</option><option>Distributor</option><option>Corporate & Other</option><option>Retail Chain</option><option>Café/Boutique</option><option>Walk-in</option>
@@ -71,116 +72,6 @@ footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
 <table id="invTable">
   <thead><tr><th>Month</th><th>Invoice</th><th>Date</th><th>Partner</th><th>Amount</th><th>GMV</th><th>Channel</th><th>Status</th></tr></thead>
   <tbody id="tbody">
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">CI25-00026</code></td>
-      <td>2025-10-31</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$58.80</td>
-      <td style="text-align:right">$84.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">CI25-00027</code></td>
-      <td>2025-10-31</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$8.40</td>
-      <td style="text-align:right">$12.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">CI25-00028</code></td>
-      <td>2025-10-31</td>
-      <td>Smile Shop</td>
-      <td style="text-align:right">$126.00</td>
-      <td style="text-align:right">$180.00</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">CI25-00029</code></td>
-      <td>2025-10-31</td>
-      <td>Smile Shop</td>
-      <td style="text-align:right">$266.35</td>
-      <td style="text-align:right">$380.50</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">CI25-00030</code></td>
-      <td>2025-11-29</td>
-      <td>Dara Hotel</td>
-      <td style="text-align:right">$88.00</td>
-      <td style="text-align:right">$88.00</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Nov 2025</td>
-      <td><code style="font-size:11px">TI25-0026</code></td>
-      <td>2025-11-01</td>
-      <td>Oakwood</td>
-      <td style="text-align:right">$21.82</td>
-      <td style="text-align:right">$21.82</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Dec 2025</td>
-      <td><code style="font-size:11px">CI25-00033</code></td>
-      <td>2025-11-30</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$25.20</td>
-      <td style="text-align:right">$25.20</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Dec 2025</td>
-      <td><code style="font-size:11px">TI25-0027</code></td>
-      <td>2025-11-30</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$15.40</td>
-      <td style="text-align:right">$15.40</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Dec 2025</td>
-      <td><code style="font-size:11px">CI25-00032</code></td>
-      <td>2025-11-30</td>
-      <td>Smile Shop</td>
-      <td style="text-align:right">$260.40</td>
-      <td style="text-align:right">$260.40</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Dec 2025</td>
-      <td><code style="font-size:11px">TI25-0028</code></td>
-      <td>2025-12-01</td>
-      <td>Oakwood</td>
-      <td style="text-align:right">$13.64</td>
-      <td style="text-align:right">$13.64</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#15803d;font-weight:600">Paid</span></td>
-    </tr>
-    <tr style="background:#fff">
-      <td>Dec 2025</td>
-      <td><code style="font-size:11px">TI25-0029</code></td>
-      <td>2025-12-01</td>
-      <td>K3M</td>
-      <td style="text-align:right">$396.00</td>
-      <td style="text-align:right">$396.00</td>
-      <td><span style="background:#7c3aed;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Distributor</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-    </tr>
     <tr style="background:#fff">
       <td>Jan 2026</td>
       <td><code style="font-size:11px">CI26-00001</code></td>
@@ -626,17 +517,20 @@ footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
 <footer>Awesomepick · Revenue Dashboard · Generated Jul 4, 2026</footer>
 
 <script>
-const LABELS = ["Nov 2025", "Dec 2025", "Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026 *"];
-const INV    = [569.37, 710.64, 7195.86, 662.61, 1077.7, 1011.35, 4597.6, 1028.32, 1894.54];
-const CONF   = [510.57, 274.04, 0, 0, 0, 0, 0, 0, 0];
-const GMV    = [766.32, 710.64, 7195.86, 662.61, 1077.7, 1011.35, 4597.6, 1028.32, 1894.54];
+const LABELS = ["Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026 *"];
+const INV    = [7240.09, 1458.4, 351.61, 896.64, 4508.0, 1028.32, 1894.54];
+const CONF   = [0, 0, 0, 0, 0, 0, 0];
+const GMV    = [7240.09, 1458.4, 351.61, 896.64, 4508.0, 1028.32, 1894.54];
 const CH_LIST  = ["Hotel", "Distributor", "Corporate & Other", "Retail Chain", "Caf\u00e9/Boutique", "Walk-in"];
 const CH_COLS  = ["#0d9488", "#7c3aed", "#2563eb", "#d97706", "#db2777", "#64748b"];
-const CH_M     = {"Hotel": [109.82, 13.64, 203.28, 0, 81.3, 816.04, 4400.0, 771.31, 299.54], "Distributor": [0, 396.0, 3711.4, 528.0, 0, 0, 0, 0, 0], "Corporate & Other": [0, 0, 2002.4, 0, 0, 0, 108.0, 108.0, 1595.0], "Retail Chain": [560.5, 275.8, 602.78, 32.21, 823.1, 92.91, 85.4, 119.01, 0], "Caf\u00e9/Boutique": [96.0, 25.2, 560.0, 58.4, 173.3, 102.4, 4.2, 0, 0], "Walk-in": [0, 0, 116.0, 44.0, 0, 0, 0, 30.0, 0]};
-const PARTNER_NAMES = ["K3M", "APSARA RESORT", "Air Cambodia", "Smile Shop", "Shangri-la", "The Weaver's Tale", "TSUTAYA", "Vattanac Golf Resort co.,Ltd", "Hyatt Regency Phnom Penh"];
-const PARTNER_VALS  = [4635.4, 4400.0, 3029.4, 2053.3, 861.82, 793.5, 538.41, 504.8, 484.0];
-const CH_TOTALS = [6694.93, 4635.4, 3813.4, 2591.71, 1019.5, 190.0];
+const CH_M     = {"Hotel": [203.28, 0.0, 90.3, 807.04, 4400.0, 771.31, 299.54], "Distributor": [3711.4, 528.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Corporate & Other": [2002.4, 0.0, 0.0, 0.0, 108.0, 108.0, 1595.0], "Retail Chain": [544.61, 823.1, 92.91, 85.4, 0.0, 119.01, 0.0], "Caf\u00e9/Boutique": [618.4, 107.3, 168.4, 4.2, 0.0, 0.0, 0.0], "Walk-in": [160.0, 0.0, 0.0, 0.0, 0.0, 30.0, 0.0]};
+const PARTNER_NAMES = ["APSARA RESORT", "K3M", "Air Cambodia", "Smile Shop", "Shangri-la", "The Weaver's Tale", "Vattanac Golf Resort co.,Ltd", "Hyatt Regency Phnom Penh", "PHILLIP BANK"];
+const PARTNER_VALS  = [4400.0, 4239.4, 3029.4, 1232.4, 861.82, 672.3, 504.8, 484.0, 480.0];
+const CH_TOTALS = [6571.47, 4239.40, 3813.40, 1665.03, 898.30, 190.0];
 const CH_KEYS   = ["Hotel", "Distributor", "Corporate & Other", "Retail Chain", "Caf\u00e9/Boutique", "Walk-in"];
+const PRODLINE_NAMES = ["Gift Sets & Bundles", "Moringa Snack Packs", "Elixir Bundles", "Wild Honey", "Pepper", "Herbal Powders", "Other"];
+const PRODLINE_VALS  = [6614.91, 4666.62, 1950.40, 912.41, 83.84, 59.30, 9.00];
+const PRODLINE_COLS  = ["#f59e0b", "#16a34a", "#8b5cf6", "#eab308", "#dc2626", "#0d9488", "#94a3b8"];
 
 const defOpts = {responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11}}}}};
 
@@ -652,8 +546,18 @@ new Chart(document.getElementById('c1'),{type:'bar',data:{
 // C2: Donut
 new Chart(document.getElementById('c2'),{type:'doughnut',data:{
   labels:['Paid','Pending','Cancelled'],
-  datasets:[{data:[784.61,17963.38,162.60],backgroundColor:['#16a34a','#f59e0b','#dc2626'],borderWidth:2}]
+  datasets:[{data:[0,17377.60,81.30],backgroundColor:['#16a34a','#f59e0b','#dc2626'],borderWidth:2}]
 },options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+
+// C6: Revenue by Product Line
+new Chart(document.getElementById('c6'),{type:'doughnut',data:{
+  labels:PRODLINE_NAMES,
+  datasets:[{data:PRODLINE_VALS,backgroundColor:PRODLINE_COLS,borderWidth:2}]
+},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:10}}},tooltip:{callbacks:{label:(ctx)=>{
+  const total=ctx.dataset.data.reduce((a,b)=>a+b,0);
+  const pct=(ctx.parsed/total*100).toFixed(1);
+  return `${ctx.label}: $${ctx.parsed.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} (${pct}%)`;
+}}}}}});
 
 // C3: Top9 Partners Horizontal Bar
 new Chart(document.getElementById('c3'),{type:'bar',data:{
