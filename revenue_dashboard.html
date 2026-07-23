@@ -10,51 +10,64 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 header{background:linear-gradient(135deg,#064e3b,#065f46,#047857);color:#fff;padding:28px 32px 24px}
 header h1{font-size:24px;font-weight:700;margin-bottom:6px}
 header p{font-size:13px;opacity:.8}
-.warn{background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 20px;font-size:13px;font-weight:600;color:#92400e}
+.note{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 20px;font-size:12.5px;color:#1e3a5f;line-height:1.6}
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;padding:24px 32px 0}
 .kpi{background:#fff;border-radius:12px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.kpi.green{border-top:3px solid #16a34a}.kpi.amber{border-top:3px solid #d97706}
-.kpi.red{border-top:3px solid #dc2626}.kpi.slate{border-top:3px solid #475569}
+.kpi.green{border-top:3px solid #16a34a}.kpi.amber{border-top:3px solid #d97706}.kpi.slate{border-top:3px solid #475569}
 .kpi-val{font-size:26px;font-weight:700;margin:4px 0}
 .kpi-lbl{font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:24px 32px}
+.section-title{padding:28px 32px 0;font-size:15px;font-weight:700;color:#065f46}
+.month-picker{padding:12px 32px 0;display:flex;align-items:center;gap:10px}
+.month-picker select{padding:8px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;background:#fff;color:#1e293b;font-weight:600}
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 32px}
 .chart-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .chart-card h3{font-size:14px;font-weight:600;margin-bottom:14px;color:#374151}
 .chart-card.wide{grid-column:1/-1}
-canvas{max-height:260px}
-#c6{max-height:1100px}
-.table-wrap{padding:0 32px 32px;overflow-x:auto}
+canvas{max-height:320px}
+#cMonthly{max-height:260px}
+.table-wrap{padding:8px 32px 32px;overflow-x:auto}
 table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06);font-size:13px}
 th{background:#f1f5f9;padding:10px 12px;text-align:left;font-weight:600;font-size:12px;text-transform:uppercase;color:#475569;white-space:nowrap}
 td{padding:9px 12px;border-bottom:1px solid #f1f5f9}
 .filters{padding:16px 32px 8px;display:flex;gap:10px;flex-wrap:wrap}
 select,input{padding:7px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;background:#fff;color:#1e293b}
 footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
+details{margin:0 32px 24px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:14px 20px}
+details summary{cursor:pointer;font-size:13px;font-weight:600;color:#065f46}
+details p{font-size:12.5px;color:#475569;margin-top:10px;line-height:1.7}
 @media(max-width:700px){.charts{grid-template-columns:1fr}.chart-card.wide{grid-column:unset}}
 </style>
 </head>
 <body>
 <header>
   <h1>📊 Awesomepick Revenue Dashboard</h1>
-  <p>Data through Jul 4, 2026 (2026 YTD only) &nbsp;·&nbsp; Jul 2026 * = partial month &nbsp;·&nbsp; Auto-updated Jul 4, 2026</p>
+  <p>Data through Jul 4, 2026 (2026 YTD only) &nbsp;·&nbsp; Jul 2026 * = partial month &nbsp;·&nbsp; 金額以已收款營收呈現，不再區分付款狀態</p>
 </header>
-<div class="warn">🚨 Paid Rate is 0% for 2026 YTD — $17,378 outstanding, not a single 2026 invoice confirmed paid yet.</div>
+
 <div class="kpi-grid">
-  <div class="kpi green"><div class="kpi-lbl">Total Invoiced</div><div class="kpi-val">$17,378</div></div>
-  <div class="kpi green"><div class="kpi-lbl">Total GMV</div><div class="kpi-val">$17,378</div></div>
-  <div class="kpi amber"><div class="kpi-lbl">Confirmed Collected</div><div class="kpi-val">$0</div></div>
-  <div class="kpi red"><div class="kpi-lbl">Outstanding AR</div><div class="kpi-val">$17,378</div></div>
-  <div class="kpi slate"><div class="kpi-lbl">Cancelled</div><div class="kpi-val">$81</div></div>
-  <div class="kpi red"><div class="kpi-lbl">Paid Rate</div><div class="kpi-val">0.0%</div><div style="font-size:11px;color:#94a3b8">0 of 41 invoices</div></div>
+  <div class="kpi green"><div class="kpi-lbl">Total Revenue (YTD)</div><div class="kpi-val">$17,378</div></div>
+  <div class="kpi green"><div class="kpi-lbl">Jul 2026 *</div><div class="kpi-val">$1,895</div></div>
+  <div class="kpi amber"><div class="kpi-lbl">Best Month (Jan 2026)</div><div class="kpi-val">$7,240</div></div>
+  <div class="kpi slate"><div class="kpi-lbl">Monthly Average</div><div class="kpi-val">$2,483</div></div>
+  <div class="kpi slate"><div class="kpi-lbl">Active Partners</div><div class="kpi-val">20</div></div>
+  <div class="kpi slate"><div class="kpi-lbl">Invoices (2026 YTD)</div><div class="kpi-val">42</div></div>
 </div>
 
 <div class="charts">
-  <div class="chart-card wide"><h3>Monthly Invoiced vs Collected</h3><canvas id="c1"></canvas></div>
-  <div class="chart-card"><h3>Payment Status</h3><canvas id="c2"></canvas></div>
-  <div class="chart-card"><h3>Top 9 Partners (GMV)</h3><canvas id="c3"></canvas></div>
-  <div class="chart-card"><h3>Revenue by Channel</h3><canvas id="c4"></canvas></div>
-  <div class="chart-card wide"><h3>Partner GMV by Month × Channel</h3><canvas id="c5"></canvas></div>
-  <div class="chart-card wide"><h3>Revenue by Product Line <span style="font-weight:400;color:#94a3b8">— item names exactly as printed on invoices, not regrouped</span></h3><canvas id="c6"></canvas><div style="font-size:11px;color:#94a3b8;margin-top:8px">Based on 34 of 42 active 2026 invoices with item-level detail on file — pre-VAT line revenue. "AWESOMEPICK "/"ASP " brand prefix stripped for display only; wording after that is unchanged from the invoice.</div></div>
+  <div class="chart-card wide"><h3>Monthly Revenue</h3><canvas id="cMonthly"></canvas></div>
+</div>
+
+<div class="section-title">依月份檢視 Top Partner / Channel / 產品線</div>
+<div class="month-picker">
+  <label for="mSel" style="font-size:13px;color:#475569">月份 Month:</label>
+  <select id="mSel" onchange="renderMonth(this.value)">
+    <option value="__ALL__">全部 All (2026 YTD)</option>
+  </select>
+</div>
+<div class="charts">
+  <div class="chart-card"><h3 id="tPartner">Top Partners</h3><canvas id="cPartner"></canvas></div>
+  <div class="chart-card"><h3 id="tChannel">Revenue by Channel</h3><canvas id="cChannel"></canvas></div>
+  <div class="chart-card wide"><h3 id="tProduct">Revenue by Product Line <span style="font-weight:400;color:#94a3b8">— item names exactly as printed on invoices, not regrouped</span></h3><canvas id="cProduct"></canvas></div>
 </div>
 
 <div class="filters">
@@ -64,560 +77,140 @@ footer{text-align:center;padding:20px;font-size:12px;color:#94a3b8}
   <select id="fChan" onchange="filterTable()"><option value="">All Channels</option>
     <option>Hotel</option><option>Distributor</option><option>Corporate & Other</option><option>Retail Chain</option><option>Café/Boutique</option><option>Walk-in</option>
   </select>
-  <select id="fStatus" onchange="filterTable()"><option value="">All Status</option>
-    <option>Paid</option><option>Pending</option><option>Cancelled</option>
-  </select>
-  <select id="fItem" onchange="filterTable()"><option value="">All Items</option>
-    <option value="Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)">Customerized Gift Set(1*Mini Pack (Classic)…</option><option value="Big Pack (Salted) 250g">Big Pack (Salted) 250g</option><option value="Power Gift Set">Power Gift Set</option><option value="Mini Pack (Salted) 90g">Mini Pack (Salted) 90g</option><option value="Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)">Elixir: Immune Forté (1*Turmeric + 100ml Wi…</option><option value="Big Pack (Classic) 250g">Big Pack (Classic) 250g</option><option value="Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)">Elixir: Vital Énergie (1*Black giner + 100m…</option><option value="Classic Cashew 250g">Classic Cashew 250g</option><option value="Light Salted Cashew 250g">Light Salted Cashew 250g</option><option value="Deep Wild Honey 100ML">Deep Wild Honey 100ML</option><option value="Wild Honey 100ml">Wild Honey 100ml</option><option value="Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)">Elixir: Tranquil Poise (1*Finger root + 100…</option><option value="Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)">Elixir: Timeless Radiance (1*Moringa + 100m…</option><option value="Classic Cashew 90g">Classic Cashew 90g</option><option value="Light Salted Cashew 90g">Light Salted Cashew 90g</option><option value="Mini Pack (Classic) 90g">Mini Pack (Classic) 90g</option><option value="Cashew Nut Box Set">Cashew Nut Box Set</option><option value="Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)">Antioxdant Gift Set - Balance Pro( 1*250g C…</option><option value="Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)">Antioxdant Gift Set - Immune Harmony ( 1*25…</option><option value="Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)">Antioxdant Gift Set - Golden Serenity ( 1*2…</option><option value="Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)">Antioxdant Gift Set - Active Flow( 1*250g C…</option><option value="Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)">Antioxdant Gift Set - Brain Vital ( 1*250g …</option><option value="Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)">Antioxdant Gift Set -Harmony Sleep ( 1*250g…</option><option value="Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)">Antioxdant Gift Set - Balance Pro( 1*250g S…</option><option value="Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)">Antioxdant Gift Set - Immune Harmony ( 1*25…</option><option value="Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)">Antioxdant Gift Set - Golden Serenity ( 1*2…</option><option value="Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)">Antioxdant Gift Set - Active Flow( 1*250g S…</option><option value="Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)">Antioxdant Gift Set - Brain Vital ( 1*250g …</option><option value="Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)">Antioxdant Gift Set -Harmony Sleep ( 1*250g…</option><option value="Wild Honey 300ml">Wild Honey 300ml</option><option value="Black pepper 90g">Black pepper 90g</option><option value="Commericial Pack (Salted) 500g">Commericial Pack (Salted) 500g</option><option value="Black ginger">Black ginger</option><option value="Red pepper 90g">Red pepper 90g</option><option value="Commericial Pack (Classic) 500g">Commericial Pack (Classic) 500g</option><option value="Fingerroot">Fingerroot</option><option value="Turmeric">Turmeric</option><option value="Mini Pack (Classic) 30g">Mini Pack (Classic) 30g</option><option value="Mini Pack (Salted) 30g">Mini Pack (Salted) 30g</option><option value="White pepper 90g">White pepper 90g</option><option value="Big Gift Bag">Big Gift Bag</option>
-  </select>
   <input id="fSearch" placeholder="Search partner…" oninput="filterTable()">
 </div>
-<p style="padding:0 32px;font-size:11px;color:#94a3b8">Showing 2026 invoices only. Item filter matches the exact product names printed on each invoice.</p>
 <div class="table-wrap">
 <table id="invTable">
-  <thead><tr><th>Month</th><th>Invoice</th><th>Date</th><th>Partner</th><th>Amount</th><th>GMV</th><th>Channel</th><th>Status</th><th>Items</th></tr></thead>
+  <thead><tr><th>Month</th><th>Invoice</th><th>Date</th><th>Partner</th><th style="text-align:right">Amount</th><th>Channel</th></tr></thead>
   <tbody id="tbody">
-    <tr data-items="AWESOMEPICK Power Gift Set|AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Mini Pack (Salted) 90g">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00001</code></td>
-      <td>2026-01-31</td>
-      <td>Smile Shop</td>
-      <td style="text-align:right">$512.40</td>
-      <td style="text-align:right">$512.40</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Power Gift Set" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Power Gift Set</span><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00002</code></td>
-      <td>2026-01-31</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$560.00</td>
-      <td style="text-align:right">$560.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Tranqu…</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00003</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$6.00</td>
-      <td style="text-align:right">$6.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00004</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$6.00</td>
-      <td style="text-align:right">$6.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00005</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$16.00</td>
-      <td style="text-align:right">$16.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">CI26-00006</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$88.00</td>
-      <td style="text-align:right">$88.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">TI25-0032</code></td>
-      <td>2026-01-09</td>
-      <td>PHILLIP BANK</td>
-      <td style="text-align:right">$480.00</td>
-      <td style="text-align:right">$480.00</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">TI25-0033</code></td>
-      <td>2026-01-15</td>
-      <td>CCU BANK</td>
-      <td style="text-align:right">$88.00</td>
-      <td style="text-align:right">$88.00</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Immune…</span></td>
-    </tr>
-    <tr data-items="ASP Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)|ASP Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)|ASP Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)|ASP Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)|ASP Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)|ASP Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)|ASP Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)|ASP Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)|ASP Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)|ASP Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)|ASP Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)|ASP Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)|ASP Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)|ASP Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)|ASP Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)|ASP Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)|ASP Classic Cashew 250g|ASP Light Salted Cashew 250g|ASP Deep Wild Honey 100ML">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">TI25-0034</code></td>
-      <td>2026-01-29</td>
-      <td>K3M</td>
-      <td style="text-align:right">$3,711.40</td>
-      <td style="text-align:right">$3,711.40</td>
-      <td><span style="background:#7c3aed;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Distributor</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="ASP Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set -H…</span><span title="ASP Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set - …</span><span title="ASP Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Antioxdant Gift Set -H…</span><span title="ASP Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Elixir: Immune Forté (…</span><span title="ASP Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Elixir: Vital Énergie …</span><span title="ASP Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Elixir: Tranquil Poise…</span><span title="ASP Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Elixir: Timeless Radia…</span><span title="ASP Classic Cashew 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Classic Cashew 250g</span><span title="ASP Light Salted Cashew 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Light Salted Cashew 250g</span><span title="ASP Deep Wild Honey 100ML" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Deep Wild Honey 100ML</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">TI25-0035</code></td>
-      <td>2026-01-29</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$203.28</td>
-      <td style="text-align:right">$203.28</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Vital …</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Big Pack (Salted) 250g">
-      <td>Jan 2026</td>
-      <td><code style="font-size:11px">TI25-0036</code></td>
-      <td>2026-01-29</td>
-      <td>Air Cambodia</td>
-      <td style="text-align:right">$1,434.40</td>
-      <td style="text-align:right">$1,434.40</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Wild Honey 100ml">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">CI26-00007</code></td>
-      <td>2026-01-31</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$58.40</td>
-      <td style="text-align:right">$58.40</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Mini Pack (Salted) 90g">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">CI26-00008</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$38.00</td>
-      <td style="text-align:right">$38.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">CI26-00009</code></td>
-      <td>2026-01-31</td>
-      <td>General customer</td>
-      <td style="text-align:right">$6.00</td>
-      <td style="text-align:right">$6.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Wild Honey 100ml">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">TI25-0037</code></td>
-      <td>2026-01-31</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$32.21</td>
-      <td style="text-align:right">$32.21</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span></td>
-    </tr>
-    <tr data-items="ASP Classic Cashew 90g|ASP Light Salted Cashew 90g">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">TI26-0001</code></td>
-      <td>2026-02-02</td>
-      <td>K3M</td>
-      <td style="text-align:right">$528.00</td>
-      <td style="text-align:right">$528.00</td>
-      <td><span style="background:#7c3aed;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Distributor</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="ASP Classic Cashew 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Classic Cashew 90g</span><span title="ASP Light Salted Cashew 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">ASP Light Salted Cashew 90g</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Feb 2026</td>
-      <td><code style="font-size:11px">TI26-0002</code></td>
-      <td>2026-02-06</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$81.30</td>
-      <td style="text-align:right">$81.30</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#dc2626;font-weight:600">Cancelled</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Power Gift Set">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">CI26-00010</code></td>
-      <td>2026-02-27</td>
-      <td>Smile Shop</td>
-      <td style="text-align:right">$720.00</td>
-      <td style="text-align:right">$720.00</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Power Gift Set" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Power Gift Set</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Wild Honey 100ml">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">CI26-00011</code></td>
-      <td>2026-02-27</td>
-      <td>LA CASA</td>
-      <td style="text-align:right">$80.00</td>
-      <td style="text-align:right">$80.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Wild Honey 100ml|AWESOMEPICK Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">TI26-0003</code></td>
-      <td>2026-02-27</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$103.10</td>
-      <td style="text-align:right">$103.10</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span><span title="AWESOMEPICK Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Timele…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Turmeric">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">CI26-00012</code></td>
-      <td>2026-02-27</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$27.30</td>
-      <td style="text-align:right">$27.30</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Turmeric" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Turmeric</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Wild Honey 100ml">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">TI26-0004</code></td>
-      <td>2026-03-02</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$81.30</td>
-      <td style="text-align:right">$81.30</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Commericial Pack (Salted) 500g|AWESOMEPICK Commericial Pack (Classic) 500g">
-      <td>Mar 2026</td>
-      <td><code style="font-size:11px">CI26-00013</code></td>
-      <td>2026-03-02</td>
-      <td>Aurelien</td>
-      <td style="text-align:right">$66.00</td>
-      <td style="text-align:right">$66.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Commericial Pack (Salted) 500g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Commericial Pa…</span><span title="AWESOMEPICK Commericial Pack (Classic) 500g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Commericial Pa…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Wild Honey 100ml">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">CI26-00014</code></td>
-      <td>2026-03-04</td>
-      <td>LACASA</td>
-      <td style="text-align:right">$80.00</td>
-      <td style="text-align:right">$80.00</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Gift Bag">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">CI26-00015</code></td>
-      <td>2026-03-24</td>
-      <td>CheckINN</td>
-      <td style="text-align:right">$9.00</td>
-      <td style="text-align:right">$9.00</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Gift Bag" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Gift Bag</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Wild Honey 300ml|AWESOMEPICK Black pepper 90g">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">TI26-0005</code></td>
-      <td>2026-03-30</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$92.91</td>
-      <td style="text-align:right">$92.91</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Wild Honey 300ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 300ml</span><span title="AWESOMEPICK Black pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Black pepper 90g</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Black ginger|AWESOMEPICK Fingerroot|AWESOMEPICK Wild Honey 300ml|AWESOMEPICK Wild Honey 100ml|AWESOMEPICK Red pepper 90g|AWESOMEPICK Black pepper 90g">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">TI26-0006</code></td>
-      <td>2026-04-01</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$138.24</td>
-      <td style="text-align:right">$138.24</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Black ginger" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Black ginger</span><span title="AWESOMEPICK Fingerroot" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Fingerroot</span><span title="AWESOMEPICK Wild Honey 300ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 300ml</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span><span title="AWESOMEPICK Red pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Red pepper 90g</span><span title="AWESOMEPICK Black pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Black pepper 90g</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Power Gift Set">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">TI26-0007</code></td>
-      <td>2026-04-07</td>
-      <td>Vattanac Golf Resort co.,Ltd</td>
-      <td style="text-align:right">$184.80</td>
-      <td style="text-align:right">$184.80</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Power Gift Set" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Power Gift Set</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK White pepper 90g|AWESOMEPICK Red pepper 90g">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">CI26-00016</code></td>
-      <td>2026-03-30</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$22.40</td>
-      <td style="text-align:right">$22.40</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK White pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK White pepper 90g</span><span title="AWESOMEPICK Red pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Red pepper 90g</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Apr 2026</td>
-      <td><code style="font-size:11px">TI26-0008</code></td>
-      <td>2026-04-20</td>
-      <td>Hyatt Regency Phnom Penh</td>
-      <td style="text-align:right">$484.00</td>
-      <td style="text-align:right">$484.00</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Immune…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)|AWESOMEPICK Black pepper 90g">
-      <td>May 2026</td>
-      <td><code style="font-size:11px">TI26-0009</code></td>
-      <td>2026-04-30</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$85.40</td>
-      <td style="text-align:right">$85.40</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Immune…</span><span title="AWESOMEPICK Black pepper 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Black pepper 90g</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Classic) 90g">
-      <td>May 2026</td>
-      <td><code style="font-size:11px">CI26-00017</code></td>
-      <td>2026-04-30</td>
-      <td>The Weaver's Tale</td>
-      <td style="text-align:right">$4.20</td>
-      <td style="text-align:right">$4.20</td>
-      <td><span style="background:#db2777;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Café/Boutique</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)">
-      <td>May 2026</td>
-      <td><code style="font-size:11px">TI26-0010</code></td>
-      <td>2026-05-04</td>
-      <td>APSARA RESORT</td>
-      <td style="text-align:right">$4,400.00</td>
-      <td style="text-align:right">$4,400.00</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Customerized G…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Mini Pack (Salted) 90g">
-      <td>May 2026</td>
-      <td><code style="font-size:11px">CI26-00018b</code></td>
-      <td>2026-05-25</td>
-      <td>Triangle Tyre Co.,Ltd</td>
-      <td style="text-align:right">$108.00</td>
-      <td style="text-align:right">$108.00</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Big Pack (Classic) 250g|AWESOMEPICK Mini Pack (Salted) 90g|AWESOMEPICK Wild Honey 100ml|AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">TI26-0011</code></td>
-      <td>2026-06-01</td>
-      <td>DUN-QIAN INTELLIGENT HOTEL CO., LTD.</td>
-      <td style="text-align:right">$311.85</td>
-      <td style="text-align:right">$311.85</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span><span title="AWESOMEPICK Mini Pack (Salted) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span><span title="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Immune…</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Classic) 90g|AWESOMEPICK Wild Honey 100ml|AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)|AWESOMEPICK Power Gift Set">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">TI26-0012</code></td>
-      <td>2026-06-01</td>
-      <td>TSUTAYA</td>
-      <td style="text-align:right">$119.01</td>
-      <td style="text-align:right">$119.01</td>
-      <td><span style="background:#d97706;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Retail Chain</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Classic) 90g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Wild Honey 100ml" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Wild Honey 100ml</span><span title="AWESOMEPICK Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Elixir: Immune…</span><span title="AWESOMEPICK Power Gift Set" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Power Gift Set</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Big Pack (Salted) 250g|AWESOMEPICK Big Pack (Classic) 250g">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">TI26-0013</code></td>
-      <td>2026-06-02</td>
-      <td>Vattanac Golf Resort co.,Ltd</td>
-      <td style="text-align:right">$320.00</td>
-      <td style="text-align:right">$320.00</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Big Pack (Salted) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Salt…</span><span title="AWESOMEPICK Big Pack (Classic) 250g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Big Pack (Clas…</span></td>
-    </tr>
-    <tr data-items="Cashew Nut Box Set">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">TI26-0014</code></td>
-      <td>2026-06-04</td>
-      <td>ATOMY CO., LTD.</td>
-      <td style="text-align:right">$108.00</td>
-      <td style="text-align:right">$108.00</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="Cashew Nut Box Set" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">Cashew Nut Box Set</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">TI26-0015b</code></td>
-      <td>2026-06-17</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$139.46</td>
-      <td style="text-align:right">$139.46</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="AWESOMEPICK Mini Pack (Classic) 30g|AWESOMEPICK Mini Pack (Salted) 30g">
-      <td>Jun 2026</td>
-      <td><code style="font-size:11px">CI26-00018a</code></td>
-      <td>2026-06-16</td>
-      <td>YANA</td>
-      <td style="text-align:right">$30.00</td>
-      <td style="text-align:right">$30.00</td>
-      <td><span style="background:#64748b;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Walk-in</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span title="AWESOMEPICK Mini Pack (Classic) 30g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Cla…</span><span title="AWESOMEPICK Mini Pack (Salted) 30g" style="display:inline-block;background:#f1f5f9;color:#334155;border:1px solid #e2e8f0;padding:1px 6px;border-radius:6px;font-size:10px;margin:1px">AWESOMEPICK Mini Pack (Sal…</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jul 2026 *</td>
-      <td><code style="font-size:11px">TI26-0015a</code></td>
-      <td>2026-07-01</td>
-      <td>Shangri-la</td>
-      <td style="text-align:right">$299.54</td>
-      <td style="text-align:right">$299.54</td>
-      <td><span style="background:#0d9488;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Hotel</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>
-    <tr data-items="">
-      <td>Jul 2026 *</td>
-      <td><code style="font-size:11px">TI26-0016</code></td>
-      <td>2026-07-01</td>
-      <td>Air Cambodia</td>
-      <td style="text-align:right">$1,595.00</td>
-      <td style="text-align:right">$1,595.00</td>
-      <td><span style="background:#2563eb;color:#fff;padding:2px 7px;border-radius:999px;font-size:11px">Corporate & Other</span></td>
-      <td><span style="color:#d97706;font-weight:600">Pending</span></td>
-      <td><span style="color:#cbd5e1;font-size:11px">—</span></td>
-    </tr>  </tbody>
+<tr><td>Jan 2026</td><td>TI25-0032</td><td>2026.01.09</td><td>PHILLIP BANK</td><td style="text-align:right">$480.00</td><td>Corporate & Other</td></tr>
+<tr><td>Jan 2026</td><td>TI25-0033</td><td>2026.01.15</td><td>CCU BANK</td><td style="text-align:right">$88.00</td><td>Corporate & Other</td></tr>
+<tr><td>Jan 2026</td><td>TI25-0034</td><td>2026.01.29</td><td>K3M</td><td style="text-align:right">$3,711.40</td><td>Distributor</td></tr>
+<tr><td>Jan 2026</td><td>TI25-0035</td><td>2026.01.29</td><td>Shangri-la</td><td style="text-align:right">$203.28</td><td>Hotel</td></tr>
+<tr><td>Jan 2026</td><td>TI25-0036</td><td>2026.01.29</td><td>Air Cambodia</td><td style="text-align:right">$1,434.40</td><td>Corporate & Other</td></tr>
+<tr><td>Jan 2026</td><td>CI25-00034</td><td>2026.01.31</td><td>Smile Shop</td><td style="text-align:right">$512.40</td><td>Retail Chain</td></tr>
+<tr><td>Jan 2026</td><td>CI25-00035</td><td>2026.01.31</td><td>The Weaver's Tale</td><td style="text-align:right">$560.00</td><td>Café/Boutique</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00007</td><td>2026.01.31</td><td>The Weaver's Tale</td><td style="text-align:right">$58.40</td><td>Café/Boutique</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00008</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$38.00</td><td>Walk-in</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00009</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$6.00</td><td>Walk-in</td></tr>
+<tr><td>Jan 2026</td><td>TI25-0037</td><td>2026.01.30</td><td>TSUTAYA</td><td style="text-align:right">$32.21</td><td>Retail Chain</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00003</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$6.00</td><td>Walk-in</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00004</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$6.00</td><td>Walk-in</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00005</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$16.00</td><td>Walk-in</td></tr>
+<tr><td>Jan 2026</td><td>CI26-00006</td><td>2026.01.31</td><td>General customer</td><td style="text-align:right">$88.00</td><td>Walk-in</td></tr>
+<tr><td>Feb 2026</td><td>TI26-0001</td><td>2026.02.02</td><td>K3M</td><td style="text-align:right">$528.00</td><td>Distributor</td></tr>
+<tr><td>Feb 2026</td><td>CI26-00010</td><td>2026.02.27</td><td>Smile Shop</td><td style="text-align:right">$720.00</td><td>Retail Chain</td></tr>
+<tr><td>Feb 2026</td><td>CI26-00011</td><td>2026.02.27</td><td>LA CASA</td><td style="text-align:right">$80.00</td><td>Café/Boutique</td></tr>
+<tr><td>Feb 2026</td><td>TI26-0003</td><td>2026.02.27</td><td>TSUTAYA</td><td style="text-align:right">$103.10</td><td>Retail Chain</td></tr>
+<tr><td>Feb 2026</td><td>CI26-00012</td><td>2026.02.27</td><td>The Weaver's Tale</td><td style="text-align:right">$27.30</td><td>Café/Boutique</td></tr>
+<tr><td>Mar 2026</td><td>TI26-0004</td><td>2026.03.02</td><td>Shangri-la</td><td style="text-align:right">$81.30</td><td>Hotel</td></tr>
+<tr><td>Mar 2026</td><td>CI26-00013</td><td>2026.03.02</td><td>Aurelien</td><td style="text-align:right">$66.00</td><td>Café/Boutique</td></tr>
+<tr><td>Mar 2026</td><td>CI26-00014</td><td>2026.03.04</td><td>LACASA</td><td style="text-align:right">$80.00</td><td>Café/Boutique</td></tr>
+<tr><td>Mar 2026</td><td>CI26-00015</td><td>2026.03.24</td><td>CheckINN</td><td style="text-align:right">$9.00</td><td>Hotel</td></tr>
+<tr><td>Mar 2026</td><td>TI26-0005</td><td>2026.03.30</td><td>TSUTAYA</td><td style="text-align:right">$92.91</td><td>Retail Chain</td></tr>
+<tr><td>Mar 2026</td><td>CI26-00016</td><td>2026.03.30</td><td>The Weaver's Tale</td><td style="text-align:right">$22.40</td><td>Café/Boutique</td></tr>
+<tr><td>Apr 2026</td><td>TI26-0006</td><td>2026.04.01</td><td>Shangri-la</td><td style="text-align:right">$138.24</td><td>Hotel</td></tr>
+<tr><td>Apr 2026</td><td>TI26-0007</td><td>2026.04.07</td><td>Vattanac Golf Resort</td><td style="text-align:right">$184.80</td><td>Hotel</td></tr>
+<tr><td>Apr 2026</td><td>TI26-0008</td><td>2026.04.20</td><td>Hyatt Regency Phnom Penh</td><td style="text-align:right">$484.00</td><td>Hotel</td></tr>
+<tr><td>Apr 2026</td><td>TI26-0009</td><td>2026.04.30</td><td>TSUTAYA</td><td style="text-align:right">$85.40</td><td>Retail Chain</td></tr>
+<tr><td>Apr 2026</td><td>CI26-00017</td><td>2026.04.30</td><td>The Weaver's Tale</td><td style="text-align:right">$4.20</td><td>Café/Boutique</td></tr>
+<tr><td>May 2026</td><td>TI26-0010</td><td>2026.05.04</td><td>APSARA RESORT</td><td style="text-align:right">$4,400.00</td><td>Hotel</td></tr>
+<tr><td>May 2026</td><td>CI26-00018</td><td>2026.05.25</td><td>Triangle Tyre Co.,Ltd</td><td style="text-align:right">$108.00</td><td>Corporate & Other</td></tr>
+<tr><td>Jun 2026</td><td>TI26-0011</td><td>2026.06.01</td><td>DUN-QIAN INTELLIGENT HOTEL CO., LTD.</td><td style="text-align:right">$311.85</td><td>Hotel</td></tr>
+<tr><td>Jun 2026</td><td>TI26-0012</td><td>2026.06.01</td><td>TSUTAYA</td><td style="text-align:right">$119.01</td><td>Retail Chain</td></tr>
+<tr><td>Jun 2026</td><td>TI26-0013</td><td>2026.06.02</td><td>Vattanac Golf Resort</td><td style="text-align:right">$320.00</td><td>Hotel</td></tr>
+<tr><td>Jun 2026</td><td>TI26-0014</td><td>2026.06.04</td><td>ATOMY CO., LTD</td><td style="text-align:right">$108.00</td><td>Corporate & Other</td></tr>
+<tr><td>Jun 2026</td><td>TI26-0015</td><td>2026.06.17</td><td>Shangri-la</td><td style="text-align:right">$139.46</td><td>Hotel</td></tr>
+<tr><td>Jun 2026</td><td>CI26-00019</td><td>2026.06.16</td><td>YANA</td><td style="text-align:right">$30.00</td><td>Walk-in</td></tr>
+<tr><td>Jul 2026 *</td><td>TI26-0015</td><td>2026.07.01</td><td>Shangri-la</td><td style="text-align:right">$299.54</td><td>Hotel</td></tr>
+<tr><td>Jul 2026 *</td><td>TI26-0016</td><td>2026.07.01</td><td>Air Cambodia</td><td style="text-align:right">$797.50</td><td>Corporate & Other</td></tr>
+<tr><td>Jul 2026 *</td><td>TI26-0017</td><td>2026.07.01</td><td>Air Cambodia</td><td style="text-align:right">$797.50</td><td>Corporate & Other</td></tr>
+  </tbody>
 </table>
 </div>
-<footer>Awesomepick · Revenue Dashboard · Generated Jul 5, 2026</footer>
+
+<details>
+<summary>⚠ 資料品質備註 Data Quality Notes（點開看細節）</summary>
+<p>
+1. <b>VAT / 未稅金額不一致</b>：部分發票（如 TI25-0032、TI26-0003/04/05/06/13/14）Invoice Record 登記的金額是「未稅小計」，另一些則是「含稅總額」，兩種都混在同一張追蹤表裡。本 dashboard 的月營收/夥伴/渠道金額，一律採用 Invoice Record 當初登記的數字（與先前提供的 Q3 目標一致），但產品線細項是用各發票品項比例往上或往下調整湊到登記金額，不是逐筆重新對稅務。建議請 Yong／記帳確認是否要統一改用含稅總額重新校正歷史數字。<br><br>
+2. <b>夥伴名稱與發票內容不符</b>：TI26-0008（登記 Hyatt Regency，發票內容顯示 ROYAL RESIDENCE HOTELS AND RESORTS CO., LTD.）、TI26-0010（登記 APSARA RESORT，發票內容顯示 M.B.I.S DEVELOPMENT CO., LTD.）、CI26-00014（登記 LACASA，發票內容顯示 AURELIEN）——可能是同一物業的法律實體全名，dashboard 仍沿用 Invoice Record 上熟悉的夥伴名稱，未自行更名。<br><br>
+3. <b>TI26-0015 發票編號重複</b>：Invoice Record 裡 6 月（$139.46）和 7 月（$299.54）都用了 TI26-0015 這個編號，但 Google Drive 只找到一份對應檔案（日期為 7/1，含稅總額 $296.37）。6 月那筆 $139.46 目前查無來源檔案，產品線暫標示「未分類」。<br><br>
+4. <b>4 筆散客小額發票查無檔案</b>：CI26-00003～00006（General customer，$6/$6/$16/$88，1月）在 Google Drive 找不到對應的發票檔案，產品線無法拆分，計入「未分類」。<br><br>
+5. <b>CI26-00019 編號誤植</b>：Invoice Record 寫成 CI26-00018（與5月 Triangle Tyre 那筆撞號），但發票本身編號其實是 CI26-00019。
+</p>
+</details>
+
+<footer>Awesomepick Revenue Dashboard · Auto-generated · 已收款營收口徑（依 Sway 確認 2026 YTD 發票均已收款登記）</footer>
 
 <script>
-const LABELS = ["Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026 *"];
-const INV    = [7240.09, 1458.4, 351.61, 896.64, 4508.0, 1028.32, 1894.54];
-const CONF   = [0, 0, 0, 0, 0, 0, 0];
-const GMV    = [7240.09, 1458.4, 351.61, 896.64, 4508.0, 1028.32, 1894.54];
-const CH_LIST  = ["Hotel", "Distributor", "Corporate & Other", "Retail Chain", "Caf\u00e9/Boutique", "Walk-in"];
-const CH_COLS  = ["#0d9488", "#7c3aed", "#2563eb", "#d97706", "#db2777", "#64748b"];
-const CH_M     = {"Hotel": [203.28, 0.0, 90.3, 807.04, 4400.0, 771.31, 299.54], "Distributor": [3711.4, 528.0, 0.0, 0.0, 0.0, 0.0, 0.0], "Corporate & Other": [2002.4, 0.0, 0.0, 0.0, 108.0, 108.0, 1595.0], "Retail Chain": [544.61, 823.1, 92.91, 85.4, 0.0, 119.01, 0.0], "Caf\u00e9/Boutique": [618.4, 107.3, 168.4, 4.2, 0.0, 0.0, 0.0], "Walk-in": [160.0, 0.0, 0.0, 0.0, 0.0, 30.0, 0.0]};
-const PARTNER_NAMES = ["APSARA RESORT", "K3M", "Air Cambodia", "Smile Shop", "Shangri-la", "The Weaver's Tale", "Vattanac Golf Resort co.,Ltd", "Hyatt Regency Phnom Penh", "PHILLIP BANK"];
-const PARTNER_VALS  = [4400.0, 4239.4, 3029.4, 1232.4, 861.82, 672.3, 504.8, 484.0, 480.0];
-const CH_TOTALS = [6571.47, 4239.40, 3813.40, 1665.03, 898.30, 190.0];
-const CH_KEYS   = ["Hotel", "Distributor", "Corporate & Other", "Retail Chain", "Caf\u00e9/Boutique", "Walk-in"];
-const PRODLINE_NAMES = ["Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)", "Big Pack (Salted) 250g", "Power Gift Set", "Mini Pack (Salted) 90g", "Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", "Big Pack (Classic) 250g", "Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)", "Classic Cashew 250g", "Light Salted Cashew 250g", "Deep Wild Honey 100ML", "Wild Honey 100ml", "Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)", "Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)", "Classic Cashew 90g", "Light Salted Cashew 90g", "Mini Pack (Classic) 90g", "Cashew Nut Box Set", "Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)", "Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)", "Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)", "Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)", "Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)", "Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)", "Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)", "Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)", "Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)", "Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)", "Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)", "Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)", "Wild Honey 300ml", "Black pepper 90g", "Commericial Pack (Salted) 500g", "Black ginger", "Red pepper 90g", "Commericial Pack (Classic) 500g", "Fingerroot", "Turmeric", "Mini Pack (Classic) 30g", "Mini Pack (Salted) 30g", "White pepper 90g", "Big Gift Bag"];
-const PRODLINE_VALS  = [4000.0, 1565.96, 1282.91, 1031.34, 964.0, 520.36, 412.8, 400.0, 400.0, 400.0, 366.38, 289.6, 284.0, 240.0, 240.0, 153.86, 108.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 102.0, 74.75, 49.92, 44.0, 23.04, 22.72, 22.0, 20.16, 16.1, 15.0, 15.0, 11.2, 9.0];
-const PRODLINE_COLS  = ["#d86161", "#d86f61", "#d87d61", "#d88b61", "#d89961", "#d8a761", "#d8b561", "#d8c361", "#d8d161", "#d2d861", "#c4d861", "#b6d861", "#a8d861", "#9ad861", "#8cd861", "#7ed861", "#70d861", "#62d861", "#61d86e", "#61d87c", "#61d88a", "#61d898", "#61d8a6", "#61d8b4", "#61d8c2", "#61d8d0", "#61d3d8", "#61c5d8", "#61b7d8", "#61a9d8", "#619bd8", "#618dd8", "#617fd8", "#6171d8", "#6163d8", "#6d61d8", "#7b61d8", "#8961d8", "#9761d8", "#a461d8", "#b261d8"];
+const RD = {"months": ["Jan 2026", "Feb 2026", "Mar 2026", "Apr 2026", "May 2026", "Jun 2026", "Jul 2026 *"], "data": {"Jan 2026": {"total": 7240.09, "partners": [["K3M", 3711.4], ["Air Cambodia", 1434.4], ["The Weaver's Tale", 618.4], ["Smile Shop", 512.4], ["PHILLIP BANK", 480.0], ["Shangri-la", 203.28], ["General customer", 160.0], ["CCU BANK", 88.0], ["TSUTAYA", 32.21]], "channels": [["Distributor", 3711.4], ["Corporate & Other", 2002.4], ["Café/Boutique", 618.4], ["Retail Chain", 544.61], ["Hotel", 203.28], ["Walk-in", 160.0]], "products": [["Big Pack (Salted) 250g", 1394.8], ["Mini Pack (Salted) 90g", 836.8], ["Power Gift Set", 504.0], ["Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)", 454.08], ["Classic Cashew 250g", 440.0], ["Light Salted Cashew 250g", 440.0], ["Deep Wild Honey 100ML", 440.0], ["Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", 380.6], ["Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)", 312.4], ["Big Pack (Classic) 250g", 256.0], ["Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)", 250.8], ["未分類 Unspecified", 116.0], ["Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)", 112.2], ["Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)", 112.2], ["Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)", 112.2], ["Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)", 112.2], ["Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)", 112.2], ["Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)", 112.2], ["Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)", 112.2], ["Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)", 112.2], ["Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)", 112.2], ["Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)", 112.2], ["Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)", 112.2], ["Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)", 112.2], ["Wild Honey 100ml", 56.01], ["Mini Pack (Classic) 90g", 12.2]]}, "Feb 2026": {"total": 1458.4, "partners": [["Smile Shop", 720.0], ["K3M", 528.0], ["TSUTAYA", 103.1], ["LA CASA", 80.0], ["The Weaver's Tale", 27.3]], "channels": [["Retail Chain", 823.1], ["Distributor", 528.0], ["Café/Boutique", 107.3]], "products": [["Power Gift Set", 720.0], ["Classic Cashew 90g", 264.0], ["Light Salted Cashew 90g", 264.0], ["Wild Honey 100ml", 105.46], ["Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)", 56.0], ["Turmeric", 16.1], ["Mini Pack (Salted) 90g", 11.46], ["Big Pack (Salted) 250g", 11.2], ["Big Pack (Classic) 250g", 10.18]]}, "Mar 2026": {"total": 351.61, "partners": [["TSUTAYA", 92.91], ["Shangri-la", 81.3], ["LACASA", 80.0], ["Aurelien", 66.0], ["The Weaver's Tale", 22.4], ["CheckINN", 9.0]], "channels": [["Café/Boutique", 168.4], ["Retail Chain", 92.91], ["Hotel", 90.3]], "products": [["Wild Honey 100ml", 108.8], ["Big Pack (Salted) 250g", 44.36], ["Commericial Pack (Salted) 500g", 44.0], ["Big Pack (Classic) 250g", 34.18], ["Black pepper 90g", 28.0], ["Wild Honey 300ml", 22.91], ["Commericial Pack (Classic) 500g", 22.0], ["White pepper 90g", 11.2], ["Red pepper 90g", 11.2], ["Big Gift Bag", 9.0], ["Mini Pack (Salted) 90g", 8.32], ["Mini Pack (Classic) 90g", 7.64]]}, "Apr 2026": {"total": 896.64, "partners": [["Hyatt Regency Phnom Penh", 484.0], ["Vattanac Golf Resort", 184.8], ["Shangri-la", 138.24], ["TSUTAYA", 85.4], ["The Weaver's Tale", 4.2]], "channels": [["Hotel", 807.04], ["Retail Chain", 85.4], ["Café/Boutique", 4.2]], "products": [["Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", 545.6], ["Mini Pack (Salted) 90g", 81.0], ["Mini Pack (Classic) 90g", 76.8], ["Wild Honey 300ml", 45.45], ["Power Gift Set", 39.6], ["Wild Honey 100ml", 37.87], ["Black pepper 90g", 22.34], ["Black ginger", 20.2], ["Fingerroot", 17.67], ["Red pepper 90g", 10.1]]}, "May 2026": {"total": 4508.0, "partners": [["APSARA RESORT", 4400.0], ["Triangle Tyre Co.,Ltd", 108.0]], "channels": [["Hotel", 4400.0], ["Corporate & Other", 108.0]], "products": [["Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)", 4400.0], ["Mini Pack (Classic) 90g", 54.0], ["Mini Pack (Salted) 90g", 54.0]]}, "Jun 2026": {"total": 1028.32, "partners": [["Vattanac Golf Resort", 320.0], ["DUN-QIAN INTELLIGENT HOTEL CO., LTD.", 311.85], ["Shangri-la", 139.46], ["TSUTAYA", 119.01], ["ATOMY CO., LTD", 108.0], ["YANA", 30.0]], "channels": [["Hotel", 771.31], ["Retail Chain", 119.01], ["Corporate & Other", 108.0], ["Walk-in", 30.0]], "products": [["Big Pack (Salted) 250g", 226.0], ["Big Pack (Classic) 250g", 226.0], ["未分類 Unspecified", 139.46], ["Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", 134.2], ["Cashew Nut Box Set", 108.0], ["Mini Pack (Salted) 90g", 74.25], ["Wild Honey 100ml", 61.01], ["Power Gift Set", 25.2], ["Mini Pack (Classic) 30g", 15.0], ["Mini Pack (Salted) 30g", 15.0], ["Mini Pack (Classic) 90g", 4.2]]}, "Jul 2026 *": {"total": 1894.54, "partners": [["Air Cambodia", 1595.0], ["Shangri-la", 299.54]], "channels": [["Corporate & Other", 1595.0], ["Hotel", 299.54]], "products": [["Big Pack (Classic) 250g", 850.86], ["Big Pack (Salted) 250g", 810.84], ["Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", 140.88], ["Wild Honey 300ml", 38.42], ["Mini Pack (Classic) 90g", 30.02], ["Wild Honey 100ml", 16.01], ["Mini Pack (Salted) 90g", 7.5]]}}, "all_time": {"total": 17377.6, "partners": [["APSARA RESORT", 4400.0], ["K3M", 4239.4], ["Air Cambodia", 3029.4], ["Smile Shop", 1232.4], ["Shangri-la", 861.82], ["The Weaver's Tale", 672.3], ["Vattanac Golf Resort", 504.8], ["Hyatt Regency Phnom Penh", 484.0], ["PHILLIP BANK", 480.0], ["TSUTAYA", 432.63], ["DUN-QIAN INTELLIGENT HOTEL CO., LTD.", 311.85], ["General customer", 160.0], ["Triangle Tyre Co.,Ltd", 108.0], ["ATOMY CO., LTD", 108.0], ["CCU BANK", 88.0], ["LA CASA", 80.0], ["LACASA", 80.0], ["Aurelien", 66.0], ["YANA", 30.0], ["CheckINN", 9.0]], "channels": [["Hotel", 6571.47], ["Distributor", 4239.4], ["Corporate & Other", 3813.4], ["Retail Chain", 1665.03], ["Café/Boutique", 898.3], ["Walk-in", 190.0]], "products": [["Customerized Gift Set(1*Mini Pack (Classic) 90g + 1* 100ml Wild Honey + 1* Red pepper 90g)", 4400.0], ["Big Pack (Salted) 250g", 2487.2], ["Big Pack (Classic) 250g", 1377.22], ["Power Gift Set", 1288.8], ["Elixir: Immune Forté (1*Turmeric + 100ml Wild Honey + 300ml Wild Honey)", 1201.28], ["Mini Pack (Salted) 90g", 1073.33], ["Elixir: Vital Énergie (1*Black giner + 100ml Wild Honey + 300ml Wild Honey)", 454.08], ["Classic Cashew 250g", 440.0], ["Light Salted Cashew 250g", 440.0], ["Deep Wild Honey 100ML", 440.0], ["Wild Honey 100ml", 385.16], ["Elixir: Tranquil Poise (1*Finger root + 100ml Wild Honey + 300ml Wild Honey)", 312.4], ["Elixir: Timeless Radiance (1*Moringa + 100ml Wild Honey + 300ml Wild Honey)", 306.8], ["Classic Cashew 90g", 264.0], ["Light Salted Cashew 90g", 264.0], ["未分類 Unspecified", 255.46], ["Mini Pack (Classic) 90g", 184.86], ["Antioxdant Gift Set - Balance Pro( 1*250g Classic cahsew+ 1* black Ginger +1*Turmeric)", 112.2], ["Antioxdant Gift Set - Immune Harmony ( 1*250g Classic cahsew+ 1*Turmeric +1*finger root)", 112.2], ["Antioxdant Gift Set - Golden Serenity ( 1*250g Classic cahsew+ 1*Turmeric +1* Moringa)", 112.2], ["Antioxdant Gift Set - Active Flow( 1*250g Classic cahsew+ 1*black giner+1* finger root)", 112.2], ["Antioxdant Gift Set - Brain Vital ( 1*250g Classic cahsew+ 1*Black ginger +1* Moringat)", 112.2], ["Antioxdant Gift Set -Harmony Sleep ( 1*250g Classic cahsew+ 1*Moringa+1*finger root)", 112.2], ["Antioxdant Gift Set - Balance Pro( 1*250g Salted cahsew+ 1* black Ginger +1*Turmeric)", 112.2], ["Antioxdant Gift Set - Immune Harmony ( 1*250g Salted cahsew+ 1*Turmeric +1*finger root)", 112.2], ["Antioxdant Gift Set - Golden Serenity ( 1*250g Salted Classic cahsew+ 1*Turmeric +1* Moringa)", 112.2], ["Antioxdant Gift Set - Active Flow( 1*250g Salted cahsew+ 1*black giner+1* finger root)", 112.2], ["Antioxdant Gift Set - Brain Vital ( 1*250g Salted cahsew+ 1*Black ginger +1* Moringat)", 112.2], ["Antioxdant Gift Set -Harmony Sleep ( 1*250g Salted cahsew+ 1*Moringa+1*finger root)", 112.2], ["Cashew Nut Box Set", 108.0], ["Wild Honey 300ml", 106.78], ["Black pepper 90g", 50.34], ["Commericial Pack (Salted) 500g", 44.0], ["Commericial Pack (Classic) 500g", 22.0], ["Red pepper 90g", 21.3], ["Black ginger", 20.2], ["Fingerroot", 17.67], ["Turmeric", 16.1], ["Mini Pack (Classic) 30g", 15.0], ["Mini Pack (Salted) 30g", 15.0], ["White pepper 90g", 11.2], ["Big Gift Bag", 9.0]]}};
+const CH_COLORS = {"Hotel":"#0d9488","Distributor":"#7c3aed","Corporate & Other":"#2563eb","Retail Chain":"#d97706","Café/Boutique":"#db2777","Walk-in":"#64748b"};
 
-const defOpts = {responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11}}}}};
+// populate month selector
+const mSel = document.getElementById('mSel');
+RD.months.forEach(m => {
+  const o = document.createElement('option'); o.value = m; o.textContent = m; mSel.appendChild(o);
+});
 
-// C1: Monthly Invoiced vs Collected
-new Chart(document.getElementById('c1'),{type:'bar',data:{
-  labels:LABELS,
-  datasets:[
-    {label:'Invoiced',data:INV,backgroundColor:LABELS.map((_,i)=>i===LABELS.length-1?'#fbbf24':'#34d399'),borderRadius:4},
-    {label:'Collected',data:CONF,backgroundColor:'#2563eb',borderRadius:4}
-  ]
-},options:{...defOpts,plugins:{legend:{display:true,position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:false,ticks:{font:{size:10}}},y:{ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:11}}}}}});
+// Monthly trend chart
+const monthlyVals = RD.months.map(m => RD.data[m].total);
+new Chart(document.getElementById('cMonthly'), {
+  type:'bar',
+  data:{labels:RD.months, datasets:[{label:'Revenue', data:monthlyVals,
+    backgroundColor: RD.months.map((m,i)=> i===RD.months.length-1 ? '#fbbf24' : '#059669'), borderRadius:6}]},
+  options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+});
 
-// C2: Donut
-new Chart(document.getElementById('c2'),{type:'doughnut',data:{
-  labels:['Paid','Pending','Cancelled'],
-  datasets:[{data:[0,17377.60,81.30],backgroundColor:['#16a34a','#f59e0b','#dc2626'],borderWidth:2}]
-},options:{responsive:true,plugins:{legend:{position:'bottom',labels:{font:{size:11}}}}}});
+let cPartner, cChannel, cProduct;
+function palette(n){
+  const base=['#059669','#0d9488','#2563eb','#7c3aed','#db2777','#d97706','#dc2626','#64748b','#84cc16','#0891b2','#a855f7','#f43f5e','#65a30d','#0284c7','#ca8a04'];
+  const out=[]; for(let i=0;i<n;i++) out.push(base[i%base.length]); return out;
+}
 
-// C6: Revenue by Product Line (literal invoice item text, sorted by revenue)
-document.getElementById('c6').parentElement.style.height = (PRODLINE_NAMES.length*24+40)+'px';
-new Chart(document.getElementById('c6'),{type:'bar',data:{
-  labels:PRODLINE_NAMES.map(n=>n.length<=42?n:n.slice(0,40)+'…'),
-  datasets:[{data:PRODLINE_VALS,backgroundColor:PRODLINE_COLS,borderRadius:3}]
-},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{title:(items)=>PRODLINE_NAMES[items[0].dataIndex],label:(ctx)=>{
-  const total=ctx.dataset.data.reduce((a,b)=>a+b,0);
-  const pct=(ctx.parsed.x/total*100).toFixed(1);
-  return `$${ctx.parsed.x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} (${pct}%)`;
-}}}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:10}}},y:{ticks:{font:{size:10}}}}}});
+function renderMonth(key){
+  const d = key==='__ALL__' ? RD.all_time : RD.data[key];
+  const label = key==='__ALL__' ? '全部 All (2026 YTD)' : key;
+  document.getElementById('tPartner').textContent = 'Top Partners — ' + label;
+  document.getElementById('tChannel').textContent = 'Revenue by Channel — ' + label;
+  document.getElementById('tProduct').textContent = 'Revenue by Product Line — ' + label;
 
-// C3: Top9 Partners Horizontal Bar
-new Chart(document.getElementById('c3'),{type:'bar',data:{
-  labels:PARTNER_NAMES,
-  datasets:[{label:'GMV',data:PARTNER_VALS,backgroundColor:'#7c3aed',borderRadius:4}]
-},options:{...defOpts,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:10}}},y:{ticks:{font:{size:10}}}}}});
+  const partners = d.partners.slice(0,9);
+  const channels = d.channels;
+  const products = d.products.slice(0,15);
 
-// C4: Channel Bar
-new Chart(document.getElementById('c4'),{type:'bar',data:{
-  labels:CH_KEYS,
-  datasets:[{label:'GMV',data:CH_TOTALS,backgroundColor:CH_COLS,borderRadius:4}]
-},options:{...defOpts,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:11}}}}}});
+  if(cPartner) cPartner.destroy();
+  cPartner = new Chart(document.getElementById('cPartner'), {
+    type:'bar',
+    data:{labels:partners.map(p=>p[0]), datasets:[{label:'Revenue', data:partners.map(p=>p[1]), backgroundColor:'#059669', borderRadius:5}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}
+  });
 
-// C5: Stacked by channel
-new Chart(document.getElementById('c5'),{type:'bar',data:{
-  labels:LABELS,
-  datasets:CH_LIST.map((c,i)=>({label:c,data:CH_M[c],backgroundColor:CH_COLS[i],borderRadius:2}))
-},options:{responsive:true,plugins:{legend:{position:'top',labels:{font:{size:11}}}},scales:{x:{stacked:true,ticks:{font:{size:10}}},y:{stacked:true,ticks:{callback:v=>'$'+v.toLocaleString(),font:{size:11}}}}}});
+  if(cChannel) cChannel.destroy();
+  cChannel = new Chart(document.getElementById('cChannel'), {
+    type:'bar',
+    data:{labels:channels.map(c=>c[0]), datasets:[{label:'Revenue', data:channels.map(c=>c[1]), backgroundColor:channels.map(c=>CH_COLORS[c[0]]||'#64748b'), borderRadius:5}]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+  });
 
-// Filter
+  if(cProduct) cProduct.destroy();
+  cProduct = new Chart(document.getElementById('cProduct'), {
+    type:'bar',
+    data:{labels:products.map(p=>p[0].length>55?p[0].slice(0,55)+'…':p[0]), datasets:[{label:'Revenue', data:products.map(p=>p[1]), backgroundColor:palette(products.length), borderRadius:5}]},
+    options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}
+  });
+}
+renderMonth('__ALL__');
+
 function filterTable(){
   const mo=document.getElementById('fMonth').value.toLowerCase();
   const ch=document.getElementById('fChan').value.toLowerCase();
-  const st=document.getElementById('fStatus').value.toLowerCase();
-  const it=document.getElementById('fItem').value.toLowerCase();
   const sr=document.getElementById('fSearch').value.toLowerCase();
   document.querySelectorAll('#tbody tr').forEach(tr=>{
     const tds=[...tr.querySelectorAll('td')].map(t=>t.textContent.toLowerCase());
-    const items=(tr.dataset.items||'').toLowerCase();
-    const ok=(!mo||tds[0].includes(mo))&&(!ch||tds[6].includes(ch))&&(!st||tds[7].includes(st))&&(!it||items.includes(it))&&(!sr||tds[3].includes(sr));
-    tr.style.display=ok?'':'none';
+    const ok=(!mo||tds[0].includes(mo))&&(!ch||tds[5].includes(ch))&&(!sr||tds[3].includes(sr));
+    tr.style.display = ok?'':'none';
   });
 }
 </script>
-</body></html>
+</body>
+</html>
